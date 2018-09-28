@@ -174,8 +174,31 @@ Une fois que notre objet est créée nous pouvons le lire en boucle en appelant 
 ```javascript
 song.loop();
 ```
-Si nous le faisons dans le **setup()**, au chargement de la page notre son commencera à se lire en boucle.
+Si nous le faisons dans le **setup()**, au chargement de la page notre son commencera à se lire en boucle. Voici donc le code complet permettant de lire un son en boucle au chargement de la page.
 
+```javascript
+var song;
+
+function preload() {
+  song = loadSound('assets/386927__gumballworld__music-box.mp3');
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(0);
+    song.loop();
+}
+
+function draw() {
+    background(0);
+    ellipse( width*0.5, height*0.5 , 50, 50);
+}
+
+function windowResized(){
+    resizeCanvas(windowWidth, windowHeight);
+    background(0);
+}
+```
 
 ## ÉTAPE 2 : Analyser le volume du son et animer notre cercle 
 
