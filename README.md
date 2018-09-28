@@ -1,6 +1,6 @@
 # p5js_codecreatif
 
-Code for a creative coding class with interaction designers.
+Code for a creative coding class with designers.
 
 Le but de ce cours est de recréer un page web inspirée de [patatap](https://patatap.com/).
 
@@ -25,6 +25,14 @@ Cet éditeur de texte est fait pour le développement web, il dispose d'une bonn
 P5js recense un bon nombre de bibliothèques compatibles et revendiquant le même esprit : http://p5js.org/libraries/
 Nous allons principalement utiliser la bibliothèque dédiée au son : [référence de p5.sound](https://p5js.org/reference/#/libraries/p5.sound).
 Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js.
+
+## CONTENU
+
+* [ÉTAPE 0 : Se familiariser avec p5js](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-0--se-familiariser-avec-p5js)<br>
+* [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
+* [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-et-animer-notre-cercle)<br>
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ## ÉTAPE 0 : se familiariser avec p5js 
 
@@ -144,6 +152,9 @@ https://p5js.org/reference/#/p5/strokeJoin
 
 Il est bien sûr possible de dessiner d'autres formes géométriques. Vous pouvez vous référer à la catégorie **Shape** de la page de référence.
 
+**L'exemple01** reprend ces différents éléments et les formalisent dans un programme fonctionnel permettant de dessiner un cercle au centre de notre fenêtre, ce cercle reste au centre de la fenêtre même si l'utilisateur redimensionne sa fenêtre.
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ## ÉTAPE 1 : charger et jouer un son
 
@@ -174,11 +185,11 @@ Une fois que notre objet est créée nous pouvons le lire en boucle en appelant 
 ```javascript
 song.loop();
 ```
-Si nous le faisons dans le **setup()**, au chargement de la page notre son commencera à se lire en boucle. Voici donc le code complet permettant de lire un son en boucle au chargement de la page.
+Si nous le faisons dans le **setup()** : au chargement de la page notre son commencera à se lire en boucle. Voici donc le code complet permettant de lire un son en boucle au chargement de la page. Comprenez bien cette fois que la méthode **.loop()** s'applique sur un objet de type **SoundFile**, c'est d'ailleurs à cela que sert le **"."** : il s'agit d'un accesseur; il permet de rentrer dans un objet et d'accéder à ses propriétés, ses méthodes. Vous ne pouvez donc utiliser la méthode **.loop()** que si elle est précisée dans la documentation de l'objet.
 
 ```javascript
 var song;
-
+// la fonction preload permet de charger des éléments (son, images, vidéos etc.) avant le démarrage du programme
 function preload() {
   song = loadSound('assets/386927__gumballworld__music-box.mp3');
 }
@@ -199,10 +210,68 @@ function windowResized(){
     background(0);
 }
 ```
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ## ÉTAPE 2 : Analyser le volume du son et animer notre cercle 
 
+Nous allons maintenant nous intéresser à la manière dont nous allons pouvoir calculer le niveau sonore de notre fichier audio en train de lireet faire réagir notre cercle à celui-ci.
+
+Nous allons pour cela utiliser un objet de type **Amplitude** dont la documentation est disponible à cette page :
 
 https://p5js.org/reference/#/p5.Amplitude
+
+Pour créer cet objet, nous allons d'abord créer une **variable** qui se situera avant le **setup()**
+```javascript
+var analyzer;
+```
+Ce code permet de créer une variable qui s'appelera *analyzer*. Pour l'instant cette variable ne contient rien, ce n'est rien de plus qu'une étiquette avec un nom marqué dessus - ce nom peut-être celui que vous souhaitez.
+
+Dans le **setup()** nous allons maintenant que cette variable sera un analyseur audio en appellant le **constructeur** de l'objet **Amplitude**
+```javascript
+analyzer = new p5.Amplitude();
+```
+après cette ligne notre variable "analyzer" sera donc reconnue par notre code comme étant un objet de type **Amplitude** nous pouvons donc maintenant appelé dessus les méthodes décrites dans la documentation en utilisant le **"."** comme accesseur.
+
+La première chose que nous devons faire est de connecter cet analyseur de volume à notre objet qui va jouer notre fichier audio, afin que le flux audio qui sorte de notre objet **SoundFile** entre dans notre objet **Amplitude** pour être analysé. Cela se fait avec la méthode **.setInput()**
+```javascript
+analyzer.setInput(song);
+analyzer.toggleNormalize(); // s'assurer que notre analyseur renvoie une valeur comprise entre 0 et 1
+```
+Cette ligne de code se place dans le **setup()** car cette action ne doit s'effectuer qu'une seule fois.
+
+A partir de maintenant nous allons animer notre cercle. Pour cela le code que nous allons écrire se placera dans le **draw()**. 
+La première chose que nous allons faire et de récupérer le niveau sonore du son en train de jouer et le stocker dans une nouvelle variable en appelant la méthode **.getLevel()** de l'objet **Amplitude**.
+```javascript
+var rms = analyzer.getLevel();
+```
+Ici nous créeons une variable et lui attribuons une valeur en une seule et même ligne. Etant donné que **.getLeve()** nous retourne une valeur comprise entre 0 et 1, *rms* contiendra à chaque frame un nombre à virgule compris entre 0 et 1 correspondant au niveau sonore émis par l'objet **SoundFile** à cette frame.
+
+Cette variable *rms* est crééee à l'intérieur du **draw()** et n'existe donc que dans ce **bloc de code**, c'est à dire entre les deux accolades délimitant la fonction **draw()**.
+
+Nous allons maintenant pouvoir transformer cette variable par des opérations mathématiques à l'aide de la fonction **map()** dont voici la page de documentation : 
+
+https://p5js.org/reference/#/p5/map
+
+Cette fonction permet de transformer une valeur se trouvant dans un intervalle définit pour lui faire correspondre une valeur dans un nouvel intervalle.
+Ici nous allons créer deux variables une pour controller la taille de notre ellipse : *ellipseSize* et une pour controller la transparence de notre ellipse : * ellipseAlpha*. 
+
+```javascript
+var ellipseSize = map(rms, 0, 1, 50 800); // rms est compris entre 0 et 1 et nous voulons une valeur comprise entre 5O et 800 pour controller la taille
+var ellipseAlpha = map(rms, 0, 1, 0, 255);// rms est compris entre 0 et 1 et nous voulons une valeur comprise entre 5O et 800 pour controller la transparence
+```
+Maitenant que nous avons calculé deux valeurs utiles et dans des intervalles de valeurs appropriés, il ne nous reste plus qu'à les utiliser.
+
+ ```javascript
+    fill(255);
+    ellipse( width*0.25, height*0.5 , ellipseSize, ellipseSize);
+    
+    fill(255, 100, 100, ellipseAlpha);
+    ellipse( width*0.75, height*0.5 , 250, 250);
+```
+**L'exemple02** reprend ces différents éléments et les formalisent dans un programme fonctionnel permettant de dessiner un cercle au centre de notre fenêtre, ce cercle reste au centre de la fenêtre même si l'utilisateur redimensionne sa fenêtre.
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+
 
 
