@@ -31,6 +31,7 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
 * [ÉTAPE 0 : Se familiariser avec p5js](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-0--se-familiariser-avec-p5js)<br>
 * [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
 * [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
+* [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -277,6 +278,116 @@ La première chose à faire va être de créer un dossier "assets" à la racine 
 
 A l'étape précédente nous avions créée ce dossier à l'intérieur de notre exemple (à côté des fichiers "sketch.js" et "index.html"), ici les fichiers que nous allons importer seront utiles à tous les exemples suivants, il est donc préférable de le placer à côté du dossier "/p5" contenant nos bibliothèques.
 
-A des fins de démonstrations j'ai choisi d'utiliser un pack nommé [Human Beatbox créée sur freesound.org par l'utilisateur Snapper 4298](https://freesound.org/people/Snapper4298/packs/11581/), il s'agit de sons percusifs et relativement courts qui seront parfaitement adaptés à nos besoins. J'ai aussi téléchargé un pack de [Stabs créée joviva](https://freesound.org/people/Jovica/packs/137/) et quelques sons d'ambiances que l'on appelle communément "drones".
+A des fins de démonstrations j'ai choisi d'utiliser un pack nommé [Human Beatbox créée sur freesound.org par l'utilisateur Snapper 4298](https://freesound.org/people/Snapper4298/packs/11581/), il s'agit de sons percusifs et relativement courts qui seront parfaitement adaptés à nos besoins. J'ai aussi téléchargé un pack de [Stabs créée joviva](https://freesound.org/people/Jovica/packs/137/) et quelques sons d'ambiances que l'on appelle communément "drones". J'ai aussi choisi quelques sons dits de "drone" que j'ai copié directement dans le dossier assets.
+
+Nous allons commencer par charger différents sons dans nôtre page : tout se passe comme à l'étape précédente.
+
+```javascript
+var kick1 // créer une variable pour stocker un premier son
+var stab1 // créer une variable pour stocker un deuxième son
+var drone1 // créer une variable pour stocker un troisième son
+
+function preload() {
+    // on charge les deux sons à partir du dossier assets situé à la racine de notre répertoire de travail
+    kick1 = loadSound("../assets/11581__snapper4298__human-beatbox/183384__snapper4298__hit-hat-looper.wav")
+    stab1 = loadSound("../assets/137__jovica__stab-pack-01/2345__jovica__stab-020-mastered-16-bit.wav")
+    drone1 = loadSound("../assets/217490__jarredgibb__drone-002.wav")
+}
+
+```
+
+Maintenant nous allons nous ateller à déclencher un son lorsque l'on appuie sur une touche de clavier : la fonction **keyIsDown()** est faite pour cela et sa documentation est disponible à cette page : 
+
+https://p5js.org/reference/#/p5/keyIsDown
+
+Vous remarquerez qu'il faut  connaitre le code clavier de chaque touche et donc consulter cette page : http://keycode.info/
+
+Le code clavier pour la touche 'a' est 90, et la fonction keyIsDown() prendra une **valeur booléenne** - c'est à dire **vrai** ou **faux** en fonction de si on appuie sur la touche concernée.
+
+Si vous écrivez le code ci-dessous dans la fonction **draw()** et que vous ouvrez la console de votre navigateur, vous verrez affiché **true** si vous appuyez sur 'a' et **false** si vous n'appuyez pas sur 'a'.
+
+```javascript
+console.log(keyIsDown(90)) // console.log() permet d'afficher des choses dans la console de votre navigateur    
+```
+
+Il faut que nous soyons capable de dire à notre page web quelque chose comme : "si on appuie sur la touche 'a' on doit jouer le son chargé dans la variable 'kick1'". Pour cela il existe dans tous les langages un mot-clé qui est **if(){}**. La syntaxe est la suivante : si la condition spécifiée entre parenthèse est vraie alors on éxecute le code entre accolades.
+
+Il n'existe pas de page de documentation de la structure **if** sur le site de p5js, mais vous pouvez vous référer à la page présente dans la documentation de processing (version java) : 
+
+https://processing.org/reference/if.html
+
+
+```javascript
+if (keyIsDown(90) == true){ // si on appuie sur la touche 'a'
+    kick1.play(); // on enclenche la lecture du son kick1
+}
+```
+Tout cela est très bien, mais malheureusement et cela même si le code fonctionne comme prévu, le son grésille énormément, cela est du au fait que le **draw()** s'éxécute très vite et lorsque vous appuyez sur une touche votre doigt reste sur la touche le temps de l'éxecution de plusieurs itération du **draw()**, le son est donc déclenché plusieurs fois et cela sature vos haut-parleurs. 
+
+Il faut donc s'assurer que le son n'est pas déjà en train de jouer lorsqu'on enclenche sa lecture. Heureusement il existe pour les objets de type SoundFile une méthode **isPlaying()** qui nous renvoie encore une fois une **variable booléenne** : **vrai** si le son est déjà en train de jouer et **faux** sinon.
+
+Voici la page de documentation de cette méthode : https://p5js.org/reference/#/p5.SoundFile/isPlaying
+
+On peut alors "encapsuler" des **if** - mais attention aux parenthèses et accolades !
+
+```javascript
+if (keyIsDown(90) == true){ // si on appuie sur la touche 'a'
+    if(kick1.isPlaying() == false){ // si le son kick1 n'est pas déjà en train de jouer
+        kick1.play(); // on enclenche la lecture du son kick1
+    }
+}
+```
+
+Ou alors on peut utiliser des opérateurs logiques (encore une fois on trouvera leur documentation sur le site de processing - mais ce sont les mêmes dans tous les langages de programmation) :
+
+- le ET logique : https://processing.org/reference/logicalAND.html
+- le OU logique : https://processing.org/reference/logicalOR.html
+- la NON logique : https://processing.org/reference/logicalNOT.html
+
+On peut donc aussi écrire le code ci-dessus de cette manière :
+
+```javascript
+//si on appuie sur la touche 'a' ET si le son kick1 n'est pas déjà en train de jouer
+if (keyIsDown(90) == true && kick1.isPlaying() != true){
+    kick1.play(); // on enclenche la lecture du son kick1
+}
+```
+Cette fois-ci nous avons atteint notre objectif.
+
+Mais cette méthode nous contraint à écrire un peu trop de lignes de code pour jouer un son. Nous allons donc écrire une **fonction** qui nous permettra de généraliser la manière dont nous voulons lire un son. Une fois cette fonction définie nous n'aurons plus qu'à l'appeler avec des paramètres sur mesure pour lire tel ou tel son en appuyant sur telle ou telle touche.
+
+Le code ci-dessous permet de définir une fonction en javascript. On la place en dehors de toute autre fonction déjà prédéfinie par p5js, c'est à dire en dehors de preload, setup, draw ou windowResized; cela nous assure de pouvoir l'appeler de n'importe quel endroit de notre code, même si typiquement nous l'appelerons dans le draw.
+
+Cette fonction pourra être appelée avec plusieurs arguments : les arguments sont les valeurs que l'on passe en paramètre c'est à dire entre les parenthèses. Cette fonction est donc générique : elle définit un comportement globale que l'on pourra appliquer à plusieurs couples de son / identifiant de touche clavier. Au moment où on appelera cette fonction dans le draw() les variables "sound" et "keyId" seront remplacées par celles fournies entre parenthèse.
+
+Voici donc la définition de la fonction :
+
+```javascript
+function playSound(sound, keyId) { // playSound est définie comme pouvant prendre deux paramètres : un son et un nombre 
+    // on vérifie si on appuie sur la touche portant le numéro keyId, et on vérifie que le son n'est pas déjà en train de jouer
+    if (keyIsDown(keyId) == true && sound.isPlaying() == false) {
+        sound.play(); // si c'est le cas on enclenche la lecture du son.
+    }
+}
+```
+
+Si maintenant on souhaite l'appeler, on le fera dans le draw() et il faudra fournir entre parenthèses un objet SoundFilet et un nombre (l'identifiant clavier de la touche qui doit permettre de jouer le son).
+
+```javascript
+//si on appuie sur la touche 'z' qui porte l'identifiant 90, le son stab1 se jouera.
+playSound(stab1, 90);
+// on appelle une seconde fois la méthode 'playSound' mais cette fois avec le son 'drone1' et l'identifiant clavier 60
+// et donc si on appuie sur 'e' le son drone1 se jouera.
+playSound(drone1, 69);
+```
+Il faut bien sur que les variables "stab1" et "drone1" aient été définies au préalable et les avoir assignées à des sons dans la fonction **preload()**.
+
+Le code permettant de faire tout cela est récapitulé dans le dossier "exemple03".
+
+
+
+
+
+
 
 
