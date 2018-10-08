@@ -31,7 +31,7 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
 * [ÉTAPE 0 : Se familiariser avec p5js](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-0--se-familiariser-avec-p5js)<br>
 * [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
 * [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
-* [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
+* [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-3--ins%C3%A9rer-plusieurs-sons-et-d%C3%A9clencher-leur-lecture-%C3%A0-laide-de-touches-du-clavier)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -383,6 +383,8 @@ playSound(drone1, 69);
 Il faut bien sur que les variables "stab1" et "drone1" aient été définies au préalable et les avoir assignées à des sons dans la fonction **preload()**.
 
 Le code permettant de faire tout cela est récapitulé dans le dossier "exemple03".
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 
 
