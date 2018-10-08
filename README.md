@@ -32,7 +32,6 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
 * [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
 * [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ## ÉTAPE 0 : se familiariser avec p5js 
 
@@ -272,6 +271,12 @@ Maitenant que nous avons calculé deux valeurs utiles et dans des intervalles de
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
+## ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier
 
+La première chose à faire va être de créer un dossier "assets" à la racine de notre répértoire de travail, dans ce dossier nous allons ranger tous les fichiers nécessaires au bon fonctionnement de notre programme. 
+
+A l'étape précédente nous avions créée ce dossier à l'intérieur de notre exemple (à côté des fichiers "sketch.js" et "index.html"), ici les fichiers que nous allons importer seront utiles à tous les exemples suivants, il est donc préférable de le placer à côté du dossier "/p5" contenant nos bibliothèques.
+
+A des fins de démonstrations j'ai choisi d'utiliser un pack nommé [Human Beatbox créée sur freesound.org par l'utilisateur Snapper 4298](https://freesound.org/people/Snapper4298/packs/11581/), il s'agit de sons percusifs et relativement courts qui seront parfaitement adaptés à nos besoins. J'ai aussi téléchargé un pack de [Stabs créée joviva](https://freesound.org/people/Jovica/packs/137/) et quelques sons d'ambiances que l'on appelle communément "drones".
 
 
