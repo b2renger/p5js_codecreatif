@@ -307,7 +307,7 @@ Le code clavier pour la touche 'a' est 90, et la fonction keyIsDown() prendra un
 Si vous écrivez le code ci-dessous dans la fonction **draw()** et que vous ouvrez la console de votre navigateur, vous verrez affiché **true** si vous appuyez sur 'a' et **false** si vous n'appuyez pas sur 'a'.
 
 ```javascript
-console.log(keyIsDown(90)) // console.log() permet d'afficher des choses dans la console de votre navigateur    
+console.log(keyIsDown(65)) // console.log() permet d'afficher des choses dans la console de votre navigateur    
 ```
 
 Il faut que nous soyons capable de dire à notre page web quelque chose comme : "si on appuie sur la touche 'a' on doit jouer le son chargé dans la variable 'kick1'". Pour cela il existe dans tous les langages un mot-clé qui est **if(){}**. La syntaxe est la suivante : si la condition spécifiée entre parenthèse est vraie alors on éxecute le code entre accolades.
@@ -318,7 +318,7 @@ https://processing.org/reference/if.html
 
 
 ```javascript
-if (keyIsDown(90) == true){ // si on appuie sur la touche 'a'
+if (keyIsDown(65) == true){ // si on appuie sur la touche 'a'
     kick1.play(); // on enclenche la lecture du son kick1
 }
 ```
@@ -331,7 +331,7 @@ Voici la page de documentation de cette méthode : https://p5js.org/reference/#/
 On peut alors "encapsuler" des **if** - mais attention aux parenthèses et accolades !
 
 ```javascript
-if (keyIsDown(90) == true){ // si on appuie sur la touche 'a'
+if (keyIsDown(65) == true){ // si on appuie sur la touche 'a'
     if(kick1.isPlaying() == false){ // si le son kick1 n'est pas déjà en train de jouer
         kick1.play(); // on enclenche la lecture du son kick1
     }
@@ -348,17 +348,17 @@ On peut donc aussi écrire le code ci-dessus de cette manière :
 
 ```javascript
 //si on appuie sur la touche 'a' ET si le son kick1 n'est pas déjà en train de jouer
-if (keyIsDown(90) == true && kick1.isPlaying() != true){
+if (keyIsDown(65) == true && kick1.isPlaying() != true){
     kick1.play(); // on enclenche la lecture du son kick1
 }
 ```
 Cette fois-ci nous avons atteint notre objectif.
 
-Mais cette méthode nous contraint à écrire un peu trop de lignes de code pour jouer un son. Nous allons donc écrire une **fonction** qui nous permettra de généraliser la manière dont nous voulons lire un son. Une fois cette fonction définie nous n'aurons plus qu'à l'appeler avec des paramètres sur mesure pour lire tel ou tel son en appuyant sur telle ou telle touche.
+Mais cette méthode nous contraint à écrire un peu trop de lignes de code pour jouer un son. Nous allons donc écrire une **fonction** qui nous permettra de généraliser la manière dont nous voulons lire un son. Une fois cette fonction définie nous n'aurons plus qu'à l'**appeler** avec des paramètres sur mesure pour lire tel ou tel son en appuyant sur telle ou telle touche.
 
-Le code ci-dessous permet de définir une fonction en javascript. On la place en dehors de toute autre fonction déjà prédéfinie par p5js, c'est à dire en dehors de preload, setup, draw ou windowResized; cela nous assure de pouvoir l'appeler de n'importe quel endroit de notre code, même si typiquement nous l'appelerons dans le draw.
+Le code ci-dessous permet de définir une fonction en javascript. On la place en dehors de toute autre fonction déjà prédéfinie par p5js, c'est à dire en dehors de **preload**, **setup**, **draw** ou **windowResized**; cela nous assure de pouvoir l'appeler de n'importe quel endroit de notre code, même si typiquement nous l'appelerons dans le **draw**.
 
-Cette fonction pourra être appelée avec plusieurs arguments : les arguments sont les valeurs que l'on passe en paramètre c'est à dire entre les parenthèses. Cette fonction est donc générique : elle définit un comportement globale que l'on pourra appliquer à plusieurs couples de son / identifiant de touche clavier. Au moment où on appelera cette fonction dans le draw() les variables "sound" et "keyId" seront remplacées par celles fournies entre parenthèse.
+Cette fonction pourra être appelée avec plusieurs **arguments** : les **arguments** sont les valeurs que l'on passe en **paramètre** c'est à dire **entre les parenthèses**. Cette fonction est donc générique : elle définit un comportement globale que l'on pourra appliquer à plusieurs couples de son / identifiant de touche clavier. Au moment où on appelera cette fonction dans le draw() les variables "sound" et "keyId" seront remplacées par celles fournies entre parenthèse.
 
 Voici donc la définition de la fonction :
 
@@ -386,8 +386,9 @@ Le code permettant de faire tout cela est récapitulé dans le dossier "exemple0
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
+## ÉTAPE 4 : Réaliser des animations réactives à nos sons
 
-
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 
 
