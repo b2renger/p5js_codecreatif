@@ -8,6 +8,9 @@ var drone1FFT
 var stab2
 var stab2Amp
 
+var drone2
+var drone2FFR
+
 
 
 function preload() {
@@ -16,6 +19,7 @@ function preload() {
     stab1 = loadSound("../assets/137__jovica__stab-pack-01/2345__jovica__stab-020-mastered-16-bit.wav")
     drone1 = loadSound("../assets/217490__jarredgibb__drone-002.wav")
     stab2 = loadSound("../assets/137__jovica__stab-pack-01/2330__jovica__stab-005-mastered-16-bit.wav")
+    drone2 = loadSound("../assets/2223__andrew-duke__drone.wav")
 }
 
 
@@ -30,6 +34,9 @@ function setup() {
     stab2Amp = new p5.Amplitude();
     stab2Amp.setInput(stab2)
 
+    drone2FFT = new p5.FFT(0.8, 1024    )
+    drone2FFT.setInput(drone2)
+
 }
 
 
@@ -38,19 +45,18 @@ function draw() {
     background(180);
     noStroke()
 
-    playSound(stab2, 82)
-    if (stab2.isPlaying() == true){
+    playSound(stab2, 82) //'r'
+    if (stab2.isPlaying() == true) {
         push()
         var amp = stab2Amp.getLevel()
         var whiteLevel = map(amp, 0, 1, 210, 255)
-        console.log(whiteLevel)
         noStroke()
         fill(whiteLevel)
-        rect(0,0,width,height)
+        rect(0, 0, width, height)
         pop()
     }
 
-    playSound(kick1, 65);
+    playSound(kick1, 65); // 'a'
     if (kick1.isPlaying() == true) {
         push()
         var radius = map(kick1.currentTime(), 0, kick1.duration(), 50, width)
@@ -59,7 +65,7 @@ function draw() {
         pop()
     }
 
-    playSound(stab1, 90);
+    playSound(stab1, 90); // 'z'
     if (stab1.isPlaying() == true) {
         push()
         var rotation = map(stab1.currentTime(), 0, stab1.duration(), 0, PI)
@@ -71,7 +77,7 @@ function draw() {
         pop()
     }
 
-    playSound(drone1, 69);
+    playSound(drone1, 69); // 'e'
     if (drone1.isPlaying() == true) {
         push()
         drone1FFT.analyze();
@@ -100,8 +106,28 @@ function draw() {
         pop()
 
         pop()
+    }
+
+    playSound(drone2, 84) // 't'
+    if (drone2.isPlaying() == true) {
+        push()
+        var waveform = drone2FFT.waveform();
+        noFill();
+        beginShape();
+        stroke(150, 255, 225); // waveform is red
+        strokeWeight(10);
+        for (var i = 0; i < waveform.length; i++) {
+            var x = map(i, 0, waveform.length, 0, width);
+            var y = map(waveform[i], -1, 1, 0, height);
+            curveVertex(x, y);
+        }
+        endShape();
+
+
+        pop()
 
     }
+
 
 
 }
