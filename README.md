@@ -35,8 +35,8 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
     * [Couleur réagissant au volume d'un son](https://github.com/b2renger/p5js_codecreatif#couleur-r%C3%A9agissant-au-volume-dun-son)<br>
     * [Rayon d'un cercle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rayon-dun-cercle-d%C3%A9pendant-de-la-position-de-lecture)<br>
     * [Rotation d'un rectangle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rotation-dun-rectangle-d%C3%A9pendant-de-la-position-de-lecture)<br>
-    * [Calculer l'énergie d'un bande de fréquence avec une FFT]()<br>
-    * [Dessiner une waveforme]()<br>
+    * [Calculer l'énergie d'une bande de fréquence avec une FFT](https://github.com/b2renger/p5js_codecreatif#calculer-l%C3%A9nergie-dune-bande-de-fr%C3%A9quence-avec-une-fft)<br>
+    * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -625,7 +625,7 @@ if (stab1.isPlaying() == true) {
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-### Calculer l'énergie d'un bande de fréquence avec une FFT
+### Calculer l'énergie d'une bande de fréquence avec une FFT
 
 Dans cette quatrième animation nous allons effectuer une analyse audio poussée qui s'appelle une [FFT (fast fourier transform)](https://fr.wikipedia.org/wiki/Transformation_de_Fourier_rapide)
 
