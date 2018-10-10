@@ -1,20 +1,20 @@
-var kick1 // créer une variable pour stocker un premier son
+// déclaration des variables dédiées aux sons
+var kick1
+var stab1
 
-var stab1 // créer une variable pour stocker un deuxième son
-
-var drone1 // créer une variable pour stocker un troisième son
-var drone1FFT
+var drone1
+var drone1FFT //cette variable va stocker un objet permettant d' effectuer une analyse audio sur le son 'drone1'
 
 var stab2
 var stab2Amp
 
 var drone2
-var drone2FFR
+var drone2FFT
 
 
 
 function preload() {
-    // on charge les deux sons à partir du dossier assets situé à la racine de notre répertoire de travail
+
     kick1 = loadSound("../assets/11581__snapper4298__human-beatbox/183384__snapper4298__hit-hat-looper.wav")
     stab1 = loadSound("../assets/137__jovica__stab-pack-01/2345__jovica__stab-020-mastered-16-bit.wav")
     drone1 = loadSound("../assets/217490__jarredgibb__drone-002.wav")
@@ -28,35 +28,40 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     background(0);
 
-    drone1FFT = new p5.FFT(0.8, 16)
-    drone1FFT.setInput(drone1)
+    // on créee un objet de type FFT (fast fourier transform) pour analyser l'énergie des bandes de fréquence de notre son
+    drone1FFT = new p5.FFT(0.8, 16) // premier paramètre est le smoothing, le second est le nombre de bandes de fréquences souhaité.
+    drone1FFT.setInput(drone1) // on 'branche' cet analyseur à notre son drone1.
 
-    stab2Amp = new p5.Amplitude();
-    stab2Amp.setInput(stab2)
+    // on créée un objet de type Amplitude pour analyse le niveau sonore de notre son (comme dans l'exemple02)
+    stab2Amp = new p5.Amplitude()
+    stab2Amp.setInput(stab2) // on 'branche' cet analyseur à notre son drone1.
 
-    drone2FFT = new p5.FFT(0.8, 1024    )
-    drone2FFT.setInput(drone2)
+    // on créee un objet de type FFT (fast fourier transform) pour obtenir une représentation sous forme de waveform.
+    drone2FFT = new p5.FFT(0.8, 1024)
+    drone2FFT.setInput(drone2) // on 'branche' cet analyseur à notre son drone2
 
 }
 
 
 function draw() {
 
-    background(180);
+    background(180)
     noStroke()
 
-    playSound(stab2, 82) //'r'
-    if (stab2.isPlaying() == true) {
-        push()
-        var amp = stab2Amp.getLevel()
-        var whiteLevel = map(amp, 0, 1, 210, 255)
+    playSound(stab2, 82) //'r' == stab2
+    if (stab2.isPlaying() == true) { // si le son joue on affiche notre animation.
+        push() // pousser un nouveau référentiel de coordonnées et de style (pour éviter que nos changements n'affectent le reste de nos dessin)
+        var amp = stab2Amp.getLevel() // obtenir le niveau sonore à l'aide de notre analyseur et le stocker dans une variable nommée amp
+        var whiteLevel = map(amp, 0, 1, 210, 255) // transformer 'amp' qui est comprise entre 0 et 1 en une nouvelle valeur entre 0 et 255
+        // dessiner un carré blanc de la taille de notre fenêtre dont la teinte est contrôllé par whiteLevel qui dépend elle même du
+        // niveau sonore de notre son en train de jouer.
         noStroke()
         fill(whiteLevel)
         rect(0, 0, width, height)
         pop()
     }
 
-    playSound(kick1, 65); // 'a'
+    playSound(kick1, 65); // 'a' == kick1
     if (kick1.isPlaying() == true) {
         push()
         var radius = map(kick1.currentTime(), 0, kick1.duration(), 50, width)
@@ -65,7 +70,7 @@ function draw() {
         pop()
     }
 
-    playSound(stab1, 90); // 'z'
+    playSound(stab1, 90); // 'z' == stab1
     if (stab1.isPlaying() == true) {
         push()
         var rotation = map(stab1.currentTime(), 0, stab1.duration(), 0, PI)
@@ -77,7 +82,7 @@ function draw() {
         pop()
     }
 
-    playSound(drone1, 69); // 'e'
+    playSound(drone1, 69); // 'e' == drone1
     if (drone1.isPlaying() == true) {
         push()
         drone1FFT.analyze();
@@ -108,13 +113,13 @@ function draw() {
         pop()
     }
 
-    playSound(drone2, 84) // 't'
+    playSound(drone2, 84) // 't' == drone2
     if (drone2.isPlaying() == true) {
         push()
         var waveform = drone2FFT.waveform();
         noFill();
         beginShape();
-        stroke(150, 255, 225); // waveform is red
+        stroke(150, 255, 225); // waveform is mint
         strokeWeight(10);
         for (var i = 0; i < waveform.length; i++) {
             var x = map(i, 0, waveform.length, 0, width);

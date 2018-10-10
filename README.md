@@ -32,6 +32,9 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
 * [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
 * [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
 * [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-3--ins%C3%A9rer-plusieurs-sons-et-d%C3%A9clencher-leur-lecture-%C3%A0-laide-de-touches-du-clavier)<br>
+    * [Couleur réagissant au volume d'un son]()<br>
+    * [Rayon d'un cercle dépendant de la position de lecture]()<br>
+    * [Rotation d'un rectangle dépendant de la position de lecture]()<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -388,9 +391,161 @@ Le code permettant de faire tout cela est récapitulé dans le dossier "exemple0
 
 ## ÉTAPE 4 : Réaliser des animations réactives à nos sons
 
+### Couleur réagissant au volume d'un son
+
+Notre première animation consiste à changer la couleur du fond en fonction du volume d'un son : 
+- il faut récupérer le volume du son à l'aide d'un analyseur audio 
+- le volume étant compris par défaut entre 0 et 1, il faut transformer cette valeur dans un intervalle cohérent avec l'expression d'une couleur (ici en niveau de gris).
+- dessiner une forme géométrique utilisant cette couleur de remplissage.
+    
+Nous allons choisir pour cela un son plutôt court et percussif que nous appelerons 'stab2', il sera déclenché lorsque nous appuierons sur la lettre 'r'. Le code ci-dessous ne présente rien de nouveau comparé à ce que nous avons déjà vu.
+
+```javascript
+var stab2
+var stab2Amp
+
+function preload() {  
+    stab2 = loadSound("../assets/137__jovica__stab-pack-01/2330__jovica__stab-005-mastered-16-bit.wav")
+}
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(0);
+    // on créée un objet de type Amplitude pour analyse le niveau sonore de notre son (comme dans l'exemple02)
+    stab2Amp = new p5.Amplitude()
+    stab2Amp.setInput(stab2) // on 'branche' cet analyseur à notre son drone1.
+}
+
+function draw() {
+
+    background(180)
+    noStroke()
+    playSound(stab2, 82) //'r' == stab2
+}
+
+```
+
+Nous allons maintenant déclencher une animation si notre son est actuellement en train de jouer. Nous allons utiliser un **if** et nous allons encadrer le code qui permet de réaliser notre animation des fonctions **push()** et **pop()**. Ces fonction ont pour but de nous permettre de réaliser des changement liés au style (stroke, fill, strokeWeight, colorMode ...) ainsi qu'aux transformations de l'espace (translate, rotate, rectMode ...) sans que celles-ci soient répercutées sur les animations suivantes.
+
+Voici la page de documentation liées à ces fonctions :
+- https://p5js.org/reference/#/p5/push
+- https://p5js.org/reference/#/p5/pop
+
+
+```javascript
+if (stab2.isPlaying() == true) { // si le son joue on affiche notre animation.
+        push() // pousser un nouveau référentiel de coordonnées et de style 
+        
+        // (...)  notre code d'animation sera écrit ici
+                                
+        pop() // restaurer le référentiel initial
+}
+```
+
+Notre animation va être relativement simple puisqu'il s'agit de dessiner une forme statique et de faire réagir sa couleur à l'amplitude du son. Nous devons donc d'abord analyser le son et récupérer son amplitude ( pour rappel : [documentation de p5.Amplitude](https://p5js.org/reference/#/p5.Amplitude)).
+
+Nous avons déjà initialisé l'analyseur de volume 'stab2Amp' et l'avons déjà connecté à notre son 'stab2' dans le **setup()** car c'est une opération qui n'a besoin d'être effectuée qu'une seule fois.
+
+Nous pouvons donc stoker dans une variable 'amp' la valeur analysée grâce à cette ligne de code à insérer juste après l'appel de push(). On appelle la fonction **.getLevel()** sur notre objet 'stab2Amp' et nous obtiendrons alors une valeur comprise entre 0 et 1 (0 représentant le silence et 1 représentant le volume maximal).
+
+```javascript
+var amp = stab2Amp.getLevel() // amp contient une valeur entre 0 et 1
+```
+
+Nous avons donc une valeur entre 0 et 1 pour décrire le volume et nous voulons maintenant une valeur qui nous permettra de controller un niveau de gris. De manière classique un niveau de gris est compris entre 0 (noir) et 255 (blanc), il faut donc que nous réalisions un calcul mathématique à l'aide de la fonction **map()**.
+
+https://p5js.org/reference/#/p5/map
+
+Comme décrit cette fonction reçoit 5 paramètres : la valeur à transformer, sa valeur minimale, sa valeur maximale, la valeur minimale que l'on souhaite obtenir et la valeur maximale que l'on veut. Cette fonction est très utile et sera utilisée très régulièrement, vous la retrouverez dans beaucoup de langages de programmation (processing, arduino etc.).
+
+```javascript
+var whiteLevel = map(amp, 0, 1, 210, 255) 
+```
+
+Avec la ligne de code ci-dessus nous transformons donc notre valeur de amp qui est comprise entre 0 et 1 en une valeur comprise entre 210 et 255, et nous stockons le résultat de ce calcul dans une nouvelle variable nommée 'whiteLevel' nous pourrons donc l'utiliser pour dessiner un carré dont la couleur de remplissage changera en fonction du volume.
+
+```javascript
+noStroke()
+fill(whiteLevel)
+rect(0, 0, width, height)
+```
+Notre code complet d'animation ressemblera donc à ceci :
+
+```javascript
+if (stab2.isPlaying() == true) { // si le son joue on affiche notre animation.
+    push() // pousser un nouveau référentiel de coordonnées et de style (pour éviter que nos changements n'affectent le reste de nos dessin)
+    var amp = stab2Amp.getLevel() // obtenir le niveau sonore à l'aide de notre analyseur et le stocker dans une variable nommée amp
+    var whiteLevel = map(amp, 0, 1, 210, 255) // transformer 'amp' qui est comprise entre 0 et 1 en une nouvelle valeur entre 0 et 255
+    // dessiner un carré blanc de la taille de notre fenêtre dont la teinte est contrôllé par whiteLevel qui dépend elle même du 
+    // niveau sonore de notre son en train de jouer.
+    noStroke()
+    fill(whiteLevel)
+    rect(0, 0, width, height)
+    pop()
+}
+```
+
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 
+### Rayon d'un cercle dépendant de la position de lecture
 
+Notre deuxième animation va aussi être relativement simple, nous allons nous attacher à représenter la progression de la lecture du son. Nous allons utiliser un son encore une fois relativement court que nous allons nommer 'kick1' et que nous allons déclencher en appuyant sur 'a'.
 
+Il faut donc d'abord initialiser une variable qui stockera le son en question et charger le son dans **preload()** à l'aide de la fonction **loadSound**.
 
+```javascript
+var kick1
+
+function preload() {  
+    kick1 = loadSound("../assets/11581__snapper4298__human-beatbox/183384__snapper4298__hit-hat-looper.wav")
+}
+```
+
+Il faut ensuite déclencher la lecture du son en appuyant sur 'a' et préparer la condition qui nous permettra de jouer notre animation, comme précédement :
+
+```javascript
+playSound(kick1, 65); // 'a' == kick1
+if (kick1.isPlaying() == true) {
+    push()
+    //(..)
+    pop()
+}
+```
+
+Nous allons maintenant nous attacher à récuperer les valeur de lecture du son. En regardant la documentation de l'objet [SoundFile](https://p5js.org/reference/#/p5.SoundFile), nous pouvons remarquer deux méthodes intéressantes **.currentTime()** qui nous donnera la position de la tête de lecture et **.duration() qui nous donnera la durée totale du son.
+
+Nous pouvons du coup utiliser la fonction **map()** vue précédement pour arriver à calculer une valeur qui dépendera de la position de lecture et qui pourra être utilisée comme rayon d'une **ellipse()**.
+
+**kick1.currentTime()** et la valeur que nous voulons mapper (ou transformer), elle est comprise entre 0 et **kick1.duration()** et nous voulons obtenir une valeur comprise entre 50 et width. Nous stockons le résultat dans une nouvelle variable que nous nommerons "radius"
+
+```javascript
+var radius = map(kick1.currentTime(), 0, kick1.duration(), 50, width) 
+```
+
+Il ne nous reste donc plus qu'à dessiner l'ellipse en question :
+
+```javascript
+fill(255, 220, 0)
+ellipse(width * 0.5, height * 0.5, radius, radius)
+pop()
+```
+
+Notre ellipse sera donc jaune, centrée (quelque soit la taille de la fenêtre) et d'un rayon valant 50 au début de la lecture du son jusqu'à recouvrir tout l'écran à la fin de la lecture du son.
+
+Voici le code complet de l'animation :
+
+```javascript
+playSound(kick1, 65); // 'a' == kick1
+if (kick1.isPlaying() == true) {
+    push()
+    var radius = map(kick1.currentTime(), 0, kick1.duration(), 50, width) 
+    fill(255, 220, 0)
+    ellipse(width * 0.5, height * 0.5, radius, radius)
+    pop()
+}
+```
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+### Rotation d'un rectangle dépendant de la position de lecture
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
