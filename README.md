@@ -35,6 +35,8 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
     * [Couleur réagissant au volume d'un son](https://github.com/b2renger/p5js_codecreatif#couleur-r%C3%A9agissant-au-volume-dun-son)<br>
     * [Rayon d'un cercle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rayon-dun-cercle-d%C3%A9pendant-de-la-position-de-lecture)<br>
     * [Rotation d'un rectangle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rotation-dun-rectangle-d%C3%A9pendant-de-la-position-de-lecture)<br>
+    * [Calculer l'énergie d'un bande de fréquence avec une FFT]()<br>
+    * [Dessiner une waveforme]()<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -548,4 +550,254 @@ if (kick1.isPlaying() == true) {
 
 ### Rotation d'un rectangle dépendant de la position de lecture
 
+Cette fois-ci nous allons controller la rotation d'un rectangle avec la même technique que précédement. Ce son sera nommé 'stab1' et il sera déclenché par appuie sur la touche 'z' du clavier.
+
+D'abord nous devons initialiser la variable et charger le son :
+
+```javascript
+var stab1
+
+function preload() {  
+    stab1 = loadSound("../assets/137__jovica__stab-pack-01/2345__jovica__stab-020-mastered-16-bit.wav")
+}
+```
+
+Nous pouvons ensuite lire le son et préparer notre condition pour l'animation :
+```javascript
+playSound(stab1, 90); // 'z' == stab1
+if (stab1.isPlaying() == true) {
+    push()
+    //(...)
+    pop()
+}
+```
+Nous allons encore utiliser **.currentTime()** et **.duration()** ainsi que la fonction **map()**, mais cette fois ci nous voulons transformer notre valeur dans un **range** utile pour une rotation, dans processing les rotations s'expriment en radians - et du coup entre 0 et PI pour un demi-tour et 0 et 2 PI pour un tour complet.
+
+Vous pouvez utiliser [ce sketch p5js](https://www.openprocessing.org/sketch/151087) pour vous rafraichir la mémoire.
+
+```javascript
+var rotation = map(stab1.currentTime(), 0, stab1.duration(), 0, PI)
+```
+Il faut maintenant réaliser la rotation à proprement parler. Nous voulons faire tourner un rectangle et nous voulons le faire tourner autour de lui-même et nous voulons que ce rectangle soit placé au centre de notre fenêtre.
+
+- [**translate()**](https://p5js.org/reference/#/p5/translate) : nous permet d'effectuer une translation, en passant entre parenthèse les coordonnées du point vers lequel nous voulons nous déplacer.
+- [**rotate()**](https://p5js.org/reference/#/p5/rotate) : nous permet d'effectuer une rotation autour de l'origine de notre reprère, en passant entre parenthèse un angle en radians.
+
+Par défaut dans p5js, comme dans processing, le point de coordonnées (0,0) est placé en haut à gauche de notre fenêtre, en appelant **translate()** et **rotate()** on déplace en fait ce point de coordonnées. En combinant ces éléments avec **push()** et **pop()** qui permettent respectivement de 'pousser' un nouveau repère pour faire des transformations dessus et **pop()** qui permet de restaurer notre ancien repère, on peut arriver à faire énormément de choses.
+
+Pour plus d'informations vous pouvez vous référer à [ce tutoriel](http://genekogan.com/code/p5js-transformations/) - écrit par Gene Kogan (artiste / developpeur particulièrement impliqué dans les domaine de l'intelligence artificielle) ou alors consulter [ce sketch p5js](https://www.openprocessing.org/sketch/388513) qui vous explique comment les transformations effectuées avec **translate()** et **rotate()** impactent ce que vous dessinez.
+
+Nous allons donc nous déplacer au centre de notre fenêtre :
+```javascript
+translate(width * 0.5, height * 0.5)
+```
+
+Puis tourner de la valeur calculée : 
+```javascript
+rotate(rotation)
+```
+
+Il ne nous reste plus qu'à dessiner notre rectangle :
+```javascript
+fill(255, 180, 180) 
+rect(0, 0, width * 0.5, width * 0.05)
+```
+
+A ce stade notre rectangle tourne autour de son coin supérieur gauche, puisque par défaut les paramètres que nous passons à **rect()** nous demande de spécifier les coordonnées du coin supérieur gauche du rectangle.
+
+Nous pouvons changer cela en appelant la fonction [**rectMode()**](https://p5js.org/reference/#/p5/rectMode), on peut faire en sorte de fournir le point central du rectangle. Si on fait cela, combiné à **translate()** et **rotate()** précédement appelés, notre rectangle tournera autour de son centre.
+
+```javascript
+playSound(stab1, 90); // 'z' == stab1
+if (stab1.isPlaying() == true) {
+    push()
+    var rotation = map(stab1.currentTime(), 0, stab1.duration(), 0, PI)
+    
+    rectMode(CENTER)
+    translate(width * 0.5, height * 0.5)
+    rotate(rotation)
+                                
+    fill(255, 180, 180)
+    rect(0, 0, width * 0.5, width * 0.05)
+    pop()
+}
+```
+
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+### Calculer l'énergie d'un bande de fréquence avec une FFT
+
+Dans cette quatrième animation nous allons effectuer une analyse audio poussée qui s'appelle une [FFT (fast fourier transform)](https://fr.wikipedia.org/wiki/Transformation_de_Fourier_rapide)
+
+En résumé cette analyse nous permet de connaitre l'énergie dans des bandes de fréquence précises, par exemple on peut connaitre l'énergie des fréquences "basses".
+
+Pour cela il va nous falloir créer un objet d'analyse audio de type [p5.FFT](https://p5js.org/reference/#/p5.FFT)
+
+Mais d'abord intégrons le son dans notre page web :
+
+```javascript
+var drone1
+var drone1FFT //cette variable va stocker un objet permettant d' effectuer une analyse audio sur le son 'drone1'
+function preload() {
+    drone1 = loadSound("../assets/217490__jarredgibb__drone-002.wav")
+}
+```
+
+Et dans le **setup()** nous pouvons maintenant, créer notre objet d'analyse audio et le connecter à notre son.
+```javascript
+// on créee un objet de type FFT (fast fourier transform) pour analyser l'énergie des bandes de fréquence de notre son
+drone1FFT = new p5.FFT(0.8, 16) // premier paramètre est le smoothing, le second est le nombre de bandes de fréquences souhaité.
+drone1FFT.setInput(drone1) // on 'branche' cet analyseur à notre son drone1.
+```
+
+Une fois cela fait comme d'habitude il faut déclencher la lecture du son, cette fois-ci avec 'e' : 
+```javascript
+playSound(drone1, 69); // 'e' == drone1
+if (drone1.isPlaying() == true) {
+    push()
+    //(...)
+    pop()
+}
+```
+
+Pour récupérer les valeurs d'une bande de fréquence particulière nous allons utiliser la méthode [**.getEnergy()**](https://p5js.org/reference/#/p5.FFT/getEnergy) à noter qu'il faut appeler la méthode **.analyze()** avant de pouvoir récupérer une valeur de **getEnergy()**. L'énergie sera une valeur comprise entre 0 et 255.
+
+```javascript
+drone1FFT.analyze();
+var nrj1 = drone1FFT.getEnergy("bass")
+```
+
+Nous pouvons donc maintenant utiliser directement cette valeur pour contrôller - par exemple - la transparence de deux losanges, et la taille d'un troisième :
+
+```javascript
+playSound(drone1, 69); // 'e' == drone1
+if (drone1.isPlaying() == true) {
+    push()
+    drone1FFT.analyze();
+    rectMode(CENTER);
+    var nrj1 = drone1FFT.getEnergy("bass")
+
+    push()
+    fill(0, 200, 255, nrj1)
+    translate(width * 0.25, height * 0.5)
+    rotate(PI / 4)
+    rect(0, 0, width * 0.2, width * 0.2)
+    pop()
+
+    push()
+    fill(0, 200, 255, 50)
+    translate(width * 0.5, height * 0.5)
+    rotate(PI / 4)
+    rect(0, 0, nrj1, nrj1)
+    pop()
+
+    push()
+    fill(0, 200, 255, nrj1)
+    translate(width * 0.75, height * 0.5)
+    rotate(PI / 4)
+    rect(0, 0, width * 0.2, width * 0.2)
+    pop()
+
+    pop()
+}
+```
+
+Notez bien l'utilisation de plusieurs **push()** et **pop()** imbriqués.
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+
+### Dessiner une waveforme
+
+Nous allons maintenant dessiner une waveforme. Commençons par intégrer notre son comme d'habitude
+
+```javascript
+var drone2
+var drone2FFT
+
+function preload() {
+    drone2 = loadSound("../assets/2223__andrew-duke__drone.wav")
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(0);
+    // on créee un objet de type FFT (fast fourier transform) pour obtenir une représentation sous forme de waveform.
+    drone2FFT = new p5.FFT(0.8, 1024)
+    drone2FFT.setInput(drone2) // on 'branche' cet analyseur à notre son drone2
+}
+
+```
+
+Puis mettre en place notre déclenchement et condition : 
+```javascript
+playSound(drone2, 84) // 't' == drone2
+if (drone2.isPlaying() == true) {
+    push()
+    //(..)
+    pop()
+}
+```
+
+Nous pouvons maintenant réaliser notre analyse audio avec cette ligne de code :
+```javascript
+var waveform = drone2FFT.waveform();
+```
+
+Notre variable du coup être un tableau contenant 1024 cases (nous avons précisé dans le setup que nous voulions un précision de 1024) et chaque case va stocker une valeur entre -1 et 1 correspondant à un volume.
+
+Nous allons utiliser une boucle [**for()**](https://processing.org/reference/for.html) pour parcourir chacune des cases de notre tableau et récupérer la valeur stockée pour pouvoir dessiner une courbe à l'aide de ces valeurs. Il faut que nous fassions correspondre à l'index de notre tableau une valeur en abscisse et la valeur stockée à une valeur en ordonnée.
+
+Pour lier nos coordonnées entre elles nous allons utiliser la fonction [**curveVertex()**](https://p5js.org/reference/#/p5/curveVertex)
+
+Pour parcourir notre tableau le squelette de la boucle for va ressembler à cela :
+
+```javascript
+for (var i = 0; i < waveform.length; i++) {
+   
+}
+```
+Autrement dit "pour i allant de 0 à la longeur de notre tableau waveform on éxécute le code entre accolade et on augmente i de 1". A la première itération i vaut 0, à la seconde i vaut 1 et on s'arrête lorsque i vaut 1023.
+
+Pour accéder à la valeur stockée dans la case située à la case "i", on utilise des crochets accolés au nom du tableau avec à l'intérieur l'index de la case à laquelle on veut accéder.
+
+```javascript
+println(waveform[500]) // imprime dans la console l'amplitude stockée à l'index 500 de notre tableau nommé waveform
+```
+
+Pour dessiner notre courbe voici donc le code à écrire :
+```javascript
+beginShape(); // préciser que nous allons commencer à dessiner une forme - tous les vertex suivant seront ajoutés à cette forme et reliés deux à deux
+for (var i = 0; i < waveform.length; i++) { // on met en place la boucle qui permet de parcourir le tableau
+    // pour chaque valeur de i :
+    var x = map(i, 0, waveform.length, 0, width); // on calcul une abscisse dépendante de i pour occuper toute la largeur de notre fenêtre
+    var y = map(waveform[i], -1, 1, 0, height); // on calcul une ordonnée dépendante de la valeur stockée dans la case i
+    curveVertex(x, y); // on ajoute ce point de coordonnées x, y à notre courbe
+}
+endShape(); // on précises que notre forme est finie.
+```
+
+Le code complet de notre animation ressemble donc à cela : 
+
+```javascript
+playSound(drone2, 84) // 't' == drone2
+if (drone2.isPlaying() == true) {
+    push()
+    var waveform = drone2FFT.waveform();
+    noFill();
+    beginShape();
+    stroke(150, 255, 225); // waveform is mint
+    strokeWeight(10);
+    for (var i = 0; i < waveform.length; i++) {
+        var x = map(i, 0, waveform.length, 0, width);
+        var y = map(waveform[i], -1, 1, 0, height);
+        curveVertex(x, y);
+    }
+    endShape();
+    pop()
+}
+```
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+Vous pouvez retrouver l'ensemble de ces 5 première animations dans l'**exemple04**
