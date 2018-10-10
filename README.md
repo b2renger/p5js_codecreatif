@@ -32,9 +32,9 @@ Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js
 * [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
 * [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
 * [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-3--ins%C3%A9rer-plusieurs-sons-et-d%C3%A9clencher-leur-lecture-%C3%A0-laide-de-touches-du-clavier)<br>
-    * [Couleur réagissant au volume d'un son]()<br>
-    * [Rayon d'un cercle dépendant de la position de lecture]()<br>
-    * [Rotation d'un rectangle dépendant de la position de lecture]()<br>
+    * [Couleur réagissant au volume d'un son](https://github.com/b2renger/p5js_codecreatif#couleur-r%C3%A9agissant-au-volume-dun-son)<br>
+    * [Rayon d'un cercle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rayon-dun-cercle-d%C3%A9pendant-de-la-position-de-lecture)<br>
+    * [Rotation d'un rectangle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rotation-dun-rectangle-d%C3%A9pendant-de-la-position-de-lecture)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
