@@ -127,10 +127,7 @@ function draw() {
             curveVertex(x, y);
         }
         endShape();
-
-
         pop()
-
     }
 
 
