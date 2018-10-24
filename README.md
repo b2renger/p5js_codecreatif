@@ -26,6 +26,10 @@ P5js recense un bon nombre de bibliothèques compatibles et revendiquant le mêm
 Nous allons principalement utiliser la bibliothèque dédiée au son : [référence de p5.sound](https://p5js.org/reference/#/libraries/p5.sound).
 Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js.
 
+Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à ce résultat :
+
+<img src="gifs/patatap-final.gif" width="480" height="360" /><br>
+
 ## CONTENU
 
 * [ÉTAPE 0 : Se familiariser avec p5js](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-0--se-familiariser-avec-p5js)<br>
@@ -395,6 +399,8 @@ Le code permettant de faire tout cela est récapitulé dans le dossier "exemple0
 
 ### Couleur réagissant au volume d'un son
 
+<img src="gifs/patatap_animation4.gif" width="480" height="360" /><br>
+
 Notre première animation consiste à changer la couleur du fond en fonction du volume d'un son : 
 - il faut récupérer le volume du son à l'aide d'un analyseur audio 
 - le volume étant compris par défaut entre 0 et 1, il faut transformer cette valeur dans un intervalle cohérent avec l'expression d'une couleur (ici en niveau de gris).
@@ -491,6 +497,8 @@ if (stab2.isPlaying() == true) { // si le son joue on affiche notre animation.
 
 ### Rayon d'un cercle dépendant de la position de lecture
 
+<img src="gifs/patatap_animation1.gif" width="480" height="360" /><br>
+
 Notre deuxième animation va aussi être relativement simple, nous allons nous attacher à représenter la progression de la lecture du son. Nous allons utiliser un son encore une fois relativement court que nous allons nommer 'kick1' et que nous allons déclencher en appuyant sur 'a'.
 
 Il faut donc d'abord initialiser une variable qui stockera le son en question et charger le son dans **preload()** à l'aide de la fonction **loadSound**.
@@ -549,6 +557,8 @@ if (kick1.isPlaying() == true) {
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ### Rotation d'un rectangle dépendant de la position de lecture
+
+<img src="gifs/patatap_animation2.gif" width="480" height="360" /><br>
 
 Cette fois-ci nous allons controller la rotation d'un rectangle avec la même technique que précédement. Ce son sera nommé 'stab1' et il sera déclenché par appuie sur la touche 'z' du clavier.
 
@@ -626,6 +636,8 @@ if (stab1.isPlaying() == true) {
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ### Calculer l'énergie d'une bande de fréquence avec une FFT
+
+<img src="gifs/patatap_animation3.gif" width="480" height="360" /><br>
 
 Dans cette quatrième animation nous allons effectuer une analyse audio poussée qui s'appelle une [FFT (fast fourier transform)](https://fr.wikipedia.org/wiki/Transformation_de_Fourier_rapide)
 
@@ -708,6 +720,8 @@ Notez bien l'utilisation de plusieurs **push()** et **pop()** imbriqués.
 
 
 ### Dessiner une waveforme
+
+<img src="gifs/patatap_animation5.gif" width="480" height="360" /><br>
 
 Nous allons maintenant dessiner une waveforme. Commençons par intégrer notre son comme d'habitude
 
