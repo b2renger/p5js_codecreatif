@@ -150,14 +150,14 @@ function draw() {
     if (harp.isPlaying() == true) {
         push()
         colorMode(HSB, 360, 100, 100, 100)
-        var lvl = harpAmp.getLevel() * 255;
+        var lvl = harpAmp.getLevel() * 200;
         var nsegment = 96
-        var teta = (map(harp.currentTime(), 0, harp.duration(), 0, nsegment + 10))
+        var ncurrentsegment = (map(harp.currentTime(), 0, harp.duration(), 0, nsegment + 10))
         strokeWeight(4)
-        for (var i = 0; i < teta; i++) {
+        for (var i = 0; i < ncurrentsegment; i++) {
             var h = map(i, 0, nsegment, 0, 320)
             // fill(h, 40, 100)
-            stroke(h, 45, 100, lvl)
+            stroke(h, 45, 100, lvl + 55)
             var angle = map(i, 0, nsegment, 0, TWO_PI);
             var x = width * 0.5 + height * 0.45 * cos(angle)
             var y = height * 0.5 + height * 0.45 * sin(angle)

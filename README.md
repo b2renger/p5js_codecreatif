@@ -41,6 +41,8 @@ Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à 
     * [Rotation d'un rectangle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rotation-dun-rectangle-d%C3%A9pendant-de-la-position-de-lecture)<br>
     * [Calculer l'énergie d'une bande de fréquence avec une FFT](https://github.com/b2renger/p5js_codecreatif#calculer-l%C3%A9nergie-dune-bande-de-fr%C3%A9quence-avec-une-fft)<br>
     * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
+    * [Cercle de couleurs]()<br>
+    * [Déplacement de points]()<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -814,4 +816,90 @@ if (drone2.isPlaying() == true) {
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-Vous pouvez retrouver l'ensemble de ces 5 première animations dans l'**exemple04**
+Vous pouvez retrouver l'ensemble de ces 5 premières animations dans l'**exemple04**
+
+
+### Parcourir un cercle à l'aide des coordonnées polaires
+
+<img src="gifs/patatap_animation6.gif" width="480" height="360" /><br>
+
+Pour réaliser cette animation nous allons utiliser un système de coordonnées polaires. Ce système de coordonnées nous permet - au lieu de préciser l'abscisse et l'ordonnée d'un point - de les calculer en fonction d'un angle et d'un rayon.
+
+Ce sketch openprocessing pourra vous servir de mémo pour les formules à appliquer :
+
+https://www.openprocessing.org/sketch/151087
+
+Pour parcourir un cercle il nous suffit alors de fixer un rayon, et de faire varier un angle entre 0 et 2 PI à l'aide d'une boucle **for**, en appliquant pour chaque itération les formules de transformation suivantes.
+
+```javascript
+x = Xcentre + rayon * cos (angle)
+y = Ycentre + rayon * sin (angle)
+```
+
+Tout d'abord et comme d'habitude ajoutons notre son à notre programme :
+
+```javascript
+var harp
+
+function preload() {
+    harp = loadSound("../assets/436128__cunningar0807__harp-glissando-up-edit.wav")
+}
+
+```
+
+Puis mettons en place notre condition pour déclencher l'animation :
+
+```javascript
+playSound(harp, 89) // 'y' == harp
+if (harp.isPlaying() == true) {
+    push()
+    //(...)
+    pop()
+}
+
+```
+Comme vous pouvez le voir dans l'animation notre cercle a une certaine résolution : il a un nombre de segment spécifique que nous allons fixer.
+
+Pour que notre animation se comporte comme souhaité, c'est à dire que le nombre de segments visibles augmente petit à petit, nous allons aussi créer une variable spécifique correspondant au nombre de segments à afficher à un instant donné de la lecture du son - cette valeur dépendera donc de *harp.currentTime()*.
+
+```javascript
+var nsegment = 96
+var ncurrentsegment = (map(harp.currentTime(), 0, harp.duration(), 0, nsegment + 1))
+```
+
+Nous allons ensuite faire en sorte que notre boucle **for** parcourt tous les segments à afficher :
+
+```javascript
+for (var i = 0; i < ncurrentsegment; i++) {
+
+}
+```
+Il nous reste maintenant a afficher chaque segment en calculant les coordonnées cartésiennes des extrémités grâce à la formule énoncée précédément. Le centre de notre cercle est le centre de notre fenêtre soit le point de coordonnées cartésiennes (width*0.5, height*0.5) et le rayon du cercle que nous voulons parcrourir est *height*0.45*
+
+```javascript
+for (var i = 0; i < ncurrentsegment; i++) {
+    stroke(0);
+    strokeWeight(4)
+    var angle = map(i, 0, nsegment, 0, TWO_PI);
+    var x = width * 0.5 + height * 0.45 * cos(angle);
+    var y = height * 0.5 + height * 0.45 * sin(angle);
+    line(width * 0.5, height * 0.5, x, y);
+}
+```
+Avec ces quelques lignes de code vous n'arrivez pas tout à fait à l'animation représentée dans le gif. Pour l'instant vous ne dessinez que des segment noirs qui s'affichent au fil du déroulement du son. A vous de jouer pour en faire quelque chose de différent maintenant : vous pouvez par exemple essayer de changer la valeur de la variable *nsegments* (essayez 5 ou 7 par exemple), au lieu de dessiner des lignes vous pourriez dessiner des cercles sur chaque position calculée, vous pourriez créer un dégradé etc.
+
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+
+### Déplacer un ensemble de points
+
+<img src="gifs/patatap_animation7.gif" width="480" height="360" /><br>
+
+```javascript
+
+```
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+Vous pouvez retrouver l'ensemble de ces 7 premières animations dans l'**exemple05**
