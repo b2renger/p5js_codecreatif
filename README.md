@@ -896,10 +896,129 @@ Avec ces quelques lignes de code vous n'arrivez pas tout à fait à l'animation 
 
 <img src="gifs/patatap_animation7.gif" width="480" height="360" /><br>
 
-```javascript
+Ce dernier exemple est sans doute le plus complexe : nous allons utiliser des tableaux pour stocker les coordonnées de points à animer. Nous allons aussi avoir recours à la fonction **random()**.
 
+https://p5js.org/reference/#/p5/random
+
+Pour faire simple : la fonction **random()** va renvoyer à chaque fois qu'on l'appelle, un nombre aléatoire.
+
+Comme d'habitude nous allons commencer par charger un son :
+
+```javascript
+var stab3
+
+function preload() {
+    stab3 = loadSound("../assets/137__jovica__stab-pack-01/2341__jovica__stab-016-mastered-16-bit.wav")
+}
+```
+
+et mettre en place notre condition pour afficher notre animation : 
+
+```javascript
+playSound(stab3, 85) // 'u' == stab3 / animation 7
+if (stab3.isPlaying() == true) {
+    push()
+    // ...
+    pop()
+}
+```
+
+Pour réaliser une animation, nous allons afficher 50 points qui vont se déplacer d'une position en dehors de notre canvas vers une position à l'intérieur de notre canvas. Nous allons donc créer des tableaux de variables qui vont stocker respectivement les positions actuelles de nos points et leurs positions cibles : il nous faudra donc créer 4 tableaux.
+
+Ces tableaux seront créés en dehors de toute fonction : à l'endroit où nous déclarons la variable pour notre son, car nous voulons qu'ils soient accessibles n'importe où dans notre code mais surtout que les valeurs qu'ils stockent soient conservées d'une itération du draw() à la suivante.
+
+Pour créer des tableaux il suffit de créer une variable classique puis de faire suivre son nom de crochets "**[**" et "**]**" :
+
+```javascript
+var xpos = []
+var ypos = []
+var xtarget = []
+var ytarget = []
+```
+Les quatres tableaux sont maintenant créés mais ils sont vides, nous allons donc profiter du **setup()** pour leur attribuer des valeurs. Les tableaux *xpos* et *ypos* devront stocker des valeurs en dehors de notre zone de dessin, et *xtarget* et *ytarget* devront stocker des valeurs dans notre zone de dessin. Nous voulons 50 points nous allons donc ajouter 50 valeurs à chaque tableau à l'aide d'une boucle [**for()**](https://processing.org/reference/for.html) et de la fonction propre à javascript [**.push()**](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/push) qui permet d'ajouter l'élément entre parenthèses à un tableau.
+
+```javascript
+for (var i = 0; i < 50; i++) {
+    // ajouter des éléments au dessus de notre canvas
+    xpos.push(random(0, width))
+    ypos.push(random(0, -height))
+    // ajouter des éléments à l'intérieur de notra canvas
+    xtarget.push(random(width))
+    ytarget.push(random(height))
+}
+```
+Nous pouvons maintenant nous attaquer à l'animation à proprement parlé, il faut que chacun de nos cercles se déplacent du point de coordonées (xpos, ypos) vers le point de coordonnées (xtarget, ytarget)
+Nous allons encore utiliser une boucle [**for()**](https://processing.org/reference/for.html) et cette fois nous allons utiliser la fonction [**lerp()**](https://p5js.org/reference/#/p5/lerp) afin de faire nos calculs.
+
+La fonction **lerp()** va calculer une nouvelle valeur comprise entre deux valeurs données pour un incrément spécifique - l'incrément doit être entre 0 et 1.
+
+Par exemple :
+
+```javascript
+lerp(12, 48, 0) // va renvoyer 12
+lerp(12, 48, 1) // va renvoyer 48
+lerp(12, 48, 0.5) // va renvoyer la valeur au milieu de l'intervalle [12, 48] soit 30
+// etc.
+```
+
+Nous nous souhaitons nous déplacer de xpos à xtarget pendant la durée de l'animation, la première chose à faire est donc de calculer une variable de temps qui vaudra 0 au début de la lecture du son et 1 à la fin. Cette variable nous servira comme troisième argument quand nous appellerons notre fonction **lerp()**.
+
+```javascript
+var t = map(stab3.currentTime(), 0, stab3.duration(), 0, 1)
+```
+
+Nous devons maintenant parcourir nos 50 cases de tableau et dessiner nos éléments :
+```javascript
+fill(255)
+noStroke()
+for (var i = 0; i < 50; i++) {
+    // on calcule la position x en appliquant la fonction lerp aux valeurs stockées à l'index i des tableaux xpos et xtarget et ce pour le temps t.
+    var x = lerp(xpos[i], xtarget[i], t)
+    // on calcule la position y en appliquant la fonction lerp aux valeurs stockées à l'index i des tableaux ypos et ytarget et ce pour le temps t.
+    var y = lerp(ypos[i], ytarget[i], t)
+    // on dessine une ellipse aux coordonées x et y
+    ellipse(x, y, 50, 50)
+}
+```
+A cette étape l'animation est un peu "rude", nous allons donc l'adoucir pour faire en sorte que l'animation de déplacement se termine au trois quarts de la durée du son et que sur les derniers instants la couleur blanche s'estompe vers le gris pour se confondre avec le fond.
+
+```javascript
+var t = map(stab3.currentTime(), 0, stab3.duration() * 0.75, 0, 1)
+var grey = map(stab3.currentTime(), stab3.duration() * 0.75, stab3.duration(), 255, 180)
+```
+En faisant ça nous devons nous assurer que nos valeurs pour *t* et *grey* ne sortent pas de l'intervalle que nous souhaitons - car par exemple quand *stab3.currentTime()* vaudra plus que *stab3.duration()x0.75* alors *t* sera supérieur à 1 et la fonction *lerp()* risque alors de se comporter différement de ce que l'on souhaiterait.
+
+La fonction [**constrain()**](https://p5js.org/reference/#/p5/constrain) permet de faire cela : elle permet "de contraindre" une variable dans un intervalle donné. Le premier argument est la variable à contraindre, le deuxième est la borne inférieure de l'intervalle et le troisième argument est la borne supérieure de l'intervalle souhaité.
+
+Aprés avoir calculé les valeur de *t* et de *grey* on peut donc appeller la fonction **contrain()** comme ceci :
+
+```javascript
+t = constrain(t, 0, 1)
+grey = constrain(grey, 180, 255)
+```
+
+Voici donc le code complet de l'animation :
+```javascript
+if (stab3.isPlaying() == true) {
+    push()
+    var t = map(stab3.currentTime(), 0, stab3.duration() * 0.75, 0, 1)
+    var grey = map(stab3.currentTime(), stab3.duration() * 0.75, stab3.duration(), 255, 180)
+    t = constrain(t, 0, 1)
+    grey = constrain(grey, 180, 255)
+    fill(grey)
+    for (var i = 0; i < 50; i++) {
+        var x = lerp(xpos[i], xtarget[i], t)
+        var y = lerp(ypos[i], ytarget[i], t)
+        ellipse(x, y, 50, 50)
+    }
+    pop()
+}
 ```
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 Vous pouvez retrouver l'ensemble de ces 7 premières animations dans l'**exemple05**
+
+```javascript
+
+```
