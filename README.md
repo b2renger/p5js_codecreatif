@@ -42,7 +42,7 @@ Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à 
     * [Calculer l'énergie d'une bande de fréquence avec une FFT](https://github.com/b2renger/p5js_codecreatif#calculer-l%C3%A9nergie-dune-bande-de-fr%C3%A9quence-avec-une-fft)<br>
     * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
     * [Cercle progressif](https://github.com/b2renger/p5js_codecreatif#parcourir-un-cercle-%C3%A0-laide-des-coordonn%C3%A9es-polaires)<br>
-    * [Déplacement de points]()<br>
+    * [Déplacement de points](https://github.com/b2renger/p5js_codecreatif#d%C3%A9placer-un-ensemble-de-points)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -1015,9 +1015,9 @@ if (stab3.isPlaying() == true) {
 }
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
-
 Vous pouvez retrouver l'ensemble de ces 7 premières animations dans l'**exemple05**
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ```javascript
 
