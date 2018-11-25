@@ -43,6 +43,10 @@ Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à 
     * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
     * [Cercle progressif](https://github.com/b2renger/p5js_codecreatif#parcourir-un-cercle-%C3%A0-laide-des-coordonn%C3%A9es-polaires)<br>
     * [Déplacement de points](https://github.com/b2renger/p5js_codecreatif#d%C3%A9placer-un-ensemble-de-points)<br>
+* [ÉTAPE 4 : Perfectionner sa technique]()<br>
+    * [Dessiner dans un calque]()<br>
+    * [Convertir un svg en tableau de point et animer son tracé]()<br>
+    * [Utiliser une bibliothèque externe pour créer des animations supplémentaires]()<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
@@ -1019,6 +1023,168 @@ Vous pouvez retrouver l'ensemble de ces 7 premières animations dans l'**exemple
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
+
+## ÉTAPE 4 : Perfectionner sa technique
+
+### Dessiner dans un calque
+
+Cette première technique va vous permettre de dessiner dans un calque, soit un objet graphique qui n'est pas forcément affiché à l'écran. Cela permettra par exemple de créer un animation dans le fond et au premier plan d'avoir une seconde animation qui nécessite de ne pas effacer les dessins faits précédement.
+
+<img src="gifs/techniques_offscreen_graphics.gif" width="480" height="360" /><br>
+
+Pour créer un calque on utilise un appel à la fonction [**createGraphics()**](https://p5js.org/reference/#/p5/createGraphics), cette fonction va nous renvoyer un objet que l'on va pouvoir stocker dans une variable pour ensuite y ajouter des formes géométriques. La fonction **createGraphics()** a besoin de deux paramètres : la *largeur* et la *hauteur* du calque à créer.
+
 ```javascript
+var pg // une variable pour créer un calque dans lequel on va pouvoir dessiner
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    pixelDensity(1)
+
+    // créer le calque à la taill de la fenêtre
+    pg = createGraphics(windowWidth, windowHeight)
+    pg.pixelDensity(1)
+}
+```
+
+Il sera maintenant possible de dessiner dans ce calque en écrivant **pg.** devant toute fonction de dessin de p5js.
+
+Par exemple si nous souhaitons dessiner une ellipse jaune de 100 pixels de rayon au milieu de notre calque , avec un contour rouge nous pourrons écrire ceci :
+
+```javascript
+pg.fill(255,255,0)
+pg.stroke(255,0,0)
+pg.strokeWeight(5)
+pg.ellipse(width*0.5, height*0.5)
+```
+
+Il ne restera plus qu'à afficher notre calque à l'aide de la fonction [**image()**](https://p5js.org/reference/#/p5/image)
+
+```javascript
+image(pg, 0, 0, width, height)
+```
+Par défaut si l'on n'appelle pas la fonction **background()** notre calque dispose d'un fond transparent à sa création mais les dessins que nous feront à l'intérieur s'ils sont animés laisserons une "trace". C'est ce que nous allons faire à présent.
+
+Notre objectif va être de faire en sorte qu'une ellipse se déplace dans notre fenêtre et que lorsqu'elle rencontrera le bord de la fenêtre elle rebondira contre ce bord et changera de direction.
+
+Nous allons donc devoir créer :
+- deux variables pour la position de notre ellipse une en abscisses et une ordonnées.
+```javascript
+var xpos = 0
+var ypos = 0
+```
+- deux variables pour la quantité déplacement en abscisses et en ordonnées.
+```javascript
+var xdir = 5
+var ydir = 5
+```
+
+Puis à chaque image calculée :
+- nous allons ajouter la quantité de déplacement à la position actuelle.
+```javascript
+xpos += xdir
+ypos += ydir
+```
+- vérifier que notre nouvelle position n'est pas en dehors de la fenêtre.
+- et si c'est le cas, inverser le sens de déplacement.
+```javascript
+if (xpos > width || xpos < 0) {
+    xdir *= -1
+}
+if (ypos > height || ypos < 0) {
+    ydir *= -1
+}
+```
+- puis dessiner notre ellipse dans le calque.
+```javascript
+pg.noStroke()
+pg.fill(255)
+pg.ellipse(xpos, ypos, 20, 20)
+```
+- et finalement afficher notre calque 
+```javascript
+ image(pg, 0, 0, width, height)
+```
+
+Voici donc le code final de l'exemple disponnible dans le dossier *techniques_offscreen_graphics*, il ajoute le fait de devoir appuyer sur la touche 'a' pour déclencher l'animation ainsi qu'un fond animé
+
+```javascript
+var pg // une variable pour créer un calque dans lequel on va pouvoir dessiner
+
+// quelques variables pour créer une animation de balle qui rebondit sur les bords de la fenêtre mais dont la trace restera affichée.
+var xpos = 0
+var ypos = 0
+var xdir = 5
+var ydir = 5
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    pixelDensity(1)
+
+    // créer le calque à la taill de la fenêtre
+    pg = createGraphics(windowWidth, windowHeight)
+    pg.pixelDensity(1)
+
+    background(0);
+
+
+}
+
+function draw() {
+    // animer le fond
+    background(frameCount % 255, 255 - frameCount % 255, 0)
+
+    // lorsque l'on appuie sur 'a'
+    if (keyIsDown(65)) {
+
+        // on créé l'animation en augmentant des variables de position à l'aide des variables de direction
+        xpos += xdir
+        ypos += ydir
+        // si une de nos coordonnées s'apprête à sortir de la fenêtre on inverse sa direction
+        if (xpos > width || xpos < 0) {
+            xdir *= -1
+        }
+        if (ypos > height || ypos < 0) {
+            ydir *= -1
+        }
+        // on dessine dans notre calque
+        pg.noStroke()
+        pg.fill(255)
+        pg.ellipse(xpos, ypos, 20, 20)
+
+        // on affiche notre calque à l'aide de la fonction 'image' de p5js
+        image(pg, 0, 0, width, height)
+
+    } else {
+        // on reset notre animation  :
+        // en réinitialisant le calque
+        pg = createGraphics(windowWidth, windowHeight)
+        pg.pixelDensity(1)
+        // et en réinitialisant les positions
+        xpos = random(width)
+        ypos = random(height)
+        xdir = random(1, 7)
+        ydir = random(1, 7)
+    }
+
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
 
 ```
+
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+### Convertir un svg en tableau de point et animer son tracé
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+### Utiliser une bibliothèque externe pour créer des animations supplémentaires
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+
