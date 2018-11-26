@@ -1172,8 +1172,6 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
-
-
 ```
 
 
@@ -1181,9 +1179,87 @@ function windowResized() {
 
 ### Convertir un svg en tableau de point et animer son tracé
 
+<img src="gifs/techniques_from_svg.gif" width="480" height="360" /><br>
+
+Cette technique est un peu complexe, mais elle permet de travailler avec des formes définies en svg (scalable vector graphics). Le rendu svg et le rendu canvas sont deux choses bien séparées en javascript, nous allons donc utiliser un programme [processing](https://processing.org/) et la bibliothèque [geomerative](http://www.ricardmarxer.com/geomerative/) qui permet d'importer un fichier svg et d'exporter un tableau de coordonnées qui sera utilisable en javascript.
+
+Ensuite nous allons utiliser une classe en javascript qui permettra de gérer l'animation et l'affichage de notre forme.
+
+Vous pourrez trouver dans le dossier *tools* le programme processing dédié il s'appelle *svg_to_array*, à la ligne 5, il existe une variable name qui permet de renseigner le nom du svg à convertir.
+
+```java
+String name = "8413b54090698bf0";
+```
+Celui-ci doit se trouver dans le dossier nommé *svg* situé au même niveau dans la hierarchie de dossier que notre programme (c'est à dire dans le dossier tools).
+
+Une fois le nom de votre svg renseigné, il suffit de lancer le programme. Il faut laisser le temps au programme de charger le svg et d'écrire le "code" que nous allons utiliser. Une fois la fenêtre de dessin de processing affichée, un fichier *.txt* portant le nom de votre svg est écrit dans le dossier du programme.
+
+Ce fichier contient des variables contenant les différents points décrivant notre svg dans deux langages : le java pour une réutilisation dans processing, et le javascript pour une réutilisation dans p5js.
+
+Le premier tracé portera le nom *xpos0* pour les abscisses et *ypos0* pour les ordonnées, si vous avez plus d'un tracé les noms seront adaptés (*xpos1* et *ypos1* pour le deuxième etc.). Si vous voulez utiliser plusieurs svg pensez bien à changer ces noms par la suite pour ne pas avoir deux tableaux portant le même nom (sinon vous aurez des erreurs).
+
+Pensez bien à votre point d'ancrage central pour les rotation et assurez vous d'avoir une **répartition homogène** des différents points sur les courbes.
+
+Une fois votre svg exporté en tableaux de points vous pouvez copier / coller ceux-ci dans un nouveau fichier, qui pourrait s'appeller par exemple *drawing.js* et devra se situer à côté de votre fichier *index.html*.
+
+Il faut maintenant ajouter ce fichier à notre page web pour pouvoir avoir accès à ces nouvelles variables, en ajoutant une entrée à notre fichier *index.html* :
+
+```html
+ <script src="drawing.js"></script>
+```
+
+Il faut maintenant aussi copier / coller le fichier *animate-drawing.js* dans votre dossier de travail, celui-ci contient une classe javascript qui vous facilitera l'utilisation des tableaux de points que nous avons pré-calculés.
+
+De la même façon que précédemment il faut ajouter ce fichier à notre *index.html* :
+
+```html
+ <script src="animate-drawing.js"></script>
+ ```
+ 
+ Passons maintenant à notre code javascript. Il va falloir créer une variable pour stocker notre objet javascript qui sera une instance de la classe *AnimateDrawing*, et lorsque nous allons créer notre objet nous devrons lui passer trois arguments : le tableau des abscisses du dessin, le tableau des ordonnées et la vitesse à laquelle dessiner (1 étant la valeur représentant la vitesse la plus élevée).
+ 
+ ```javascript
+var a; // un variable qui va stocker notre tracé animé
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    pixelDensity(1)
+
+    // on fournit les deux trableaux de coordonnées et la vitesse (1 étant le plus rapide)
+    // les deux tableaux sont fournis dans le fichier 'drawing.js'
+    a = new AnimateDrawing(xpos0, ypos0, 1)
+}
+```
+Le dessin va se créer progressivement dans un calque à fond transparent qui lui est propre. 
+
+Pour dessiner, on appelle la fonction **.animateDrawing()** sur notre objet en lui passant une couleur et une épaisseur de trait.
+
+On peut aussi effacer le dessin en appellant la fonction **.resetDrawing()** sur notre objet.
+
+
+```javascript
+function draw() {
+    background(0)
+
+    if (keyIsDown(65)) {
+        // on appelle la fonction animateDrawing avec en premier paramètre une couleur et en second l'épaisseur
+        a.animateDrawing(color(255, 0, 0), 5)
+    } else {
+        // on reset le dessin
+        a.resetDrawing()
+    }
+}
+```
+
+
+
+
+
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ### Utiliser une bibliothèque externe pour créer des animations supplémentaires
+
+<img src="gifs/techniques_animejs.gif" width="480" height="360" /><br>
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
