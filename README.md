@@ -1183,6 +1183,8 @@ function windowResized() {
 
 Cette technique est un peu complexe, mais elle permet de travailler avec des formes définies en svg (scalable vector graphics). Le rendu svg et le rendu canvas sont deux choses bien séparées en javascript, nous allons donc utiliser un programme [processing](https://processing.org/) et la bibliothèque [geomerative](http://www.ricardmarxer.com/geomerative/) qui permet d'importer un fichier svg et d'exporter un tableau de coordonnées qui sera utilisable en javascript.
 
+Pour rappel il est très simple d'installer une nouvelle bibliothèque dans processing : il suffit d'aller dans le menu *Sketch* -> *Importer une librairie* -> *Ajouter une librairie*. La fenêtre du *contribution manager* va alors s'ouvrir, il vous reste alors à taper *geomerative* dans le champ *filter* et de cliquer sur *installer*.
+
 Ensuite nous allons utiliser une classe en javascript qui permettra de gérer l'animation et l'affichage de notre forme.
 
 Vous pourrez trouver dans le dossier *tools* le programme processing dédié il s'appelle *svg_to_array*, à la ligne 5, il existe une variable name qui permet de renseigner le nom du svg à convertir.
