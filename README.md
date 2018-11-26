@@ -43,10 +43,10 @@ Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à 
     * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
     * [Cercle progressif](https://github.com/b2renger/p5js_codecreatif#parcourir-un-cercle-%C3%A0-laide-des-coordonn%C3%A9es-polaires)<br>
     * [Déplacement de points](https://github.com/b2renger/p5js_codecreatif#d%C3%A9placer-un-ensemble-de-points)<br>
-* [ÉTAPE 4 : Perfectionner sa technique]()<br>
-    * [Dessiner dans un calque]()<br>
-    * [Convertir un svg en tableau de point et animer son tracé]()<br>
-    * [Utiliser une bibliothèque externe pour créer des animations supplémentaires]()<br>
+* [ÉTAPE 4 : Perfectionner sa technique](https://github.com/b2renger/p5js_codecreatif#%C3%A9tape-4--perfectionner-sa-technique)<br>
+    * [Dessiner dans un calque](https://github.com/b2renger/p5js_codecreatif#dessiner-dans-un-calque)<br>
+    * [Convertir un svg en tableau de point et animer son tracé](https://github.com/b2renger/p5js_codecreatif#convertir-un-svg-en-tableau-de-point-et-animer-son-trac%C3%A9)<br>
+    * [Utiliser une bibliothèque externe pour créer des animations supplémentaires](https://github.com/b2renger/p5js_codecreatif#utiliser-une-biblioth%C3%A8que-externe-pour-cr%C3%A9er-des-animations-suppl%C3%A9mentaires)<br>
 
 
 ## ÉTAPE 0 : se familiariser avec p5js 
