@@ -1263,8 +1263,154 @@ function draw() {
 
 <img src="gifs/techniques_animejs.gif" width="480" height="360" /><br>
 
+Nous allons ici nous intéresser à une bibliothèque javascript externe à p5js : [**anime.js**](https://github.com/juliangarnier/anime) : une des forces de p5js est de pouvoir s'interfacer avec de nombreuses autres bibliothèques externes.
+
+**Animejs** est une bibliothèque javascript très riche qui permet de faire de nombreuses choses :
+- animation css.
+- animation de svg.
+- easing (ensemble de fonctions permettant d'animer tout type de propriété à travers l'usage de variables).
+
+Dans le cadre de ce cours nous allons nous intéresser principalement à ce dernier point. Notre objectif va être de créer des objets javascript contenant des propriétés et de faire varier ces propriétés à l'aide des fonctionnalités d'anime.js.
+
+Dans chacun des exemples la logique sera la même :
+
+1- nous devrons créer un **objet** javascript qui va stocker une ou plusieures propriétés.
+
+2- créer une **animation** qui devra être **liée à cet objet** et définir ses **caractéristiques** (durée, type de courbe d'animation, nouvelle valeur à atteindre pour chaque propriété définie etc.).
+
+3- utiliser les **propriétés de notre objet** pour **afficher des éléments graphiques**.
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+#### Faire varier le rayon d'un cercle avec une fonction de easing sur mesure.
+
+Notre première animation va consister à faire varier le rayon d'un cercle à l'aide d'une courbe de 'easing' faite sur mesure.
+
+La première étape consiste à créer un objet. Cet objet s'appelera *'anim1'* et portera une seule propriété *'w'* qui sera utilisée par la suite comme le rayon d'un cercle que nous dessinerons. Cette objet doit être créé tout en haut de notre programme, soit en dehors du **setup()** et du **draw()**, afin qu'elle soit accessible partout dans notre programme, elle doit donc avoir un nom unique.
+La syntaxe pour définir cet objet est la suivante :
 ```javascript
-// https://github.com/juliangarnier/
+var anim1 = {
+    w: 0
+}
+```
+Dans notre définition notre objet ne comporte qu'une seule propriété *'w'* dont la valeur est initialisée à 0 (faites bien attention : alors qu'habituellement nous utilisons '=' pour attribuer une valeur à une propriété ici nous utilisons ':').
+
+Le deuxième étape consiste à définir notre animation. Cette animation va se définir dans le **draw()** et devra être créée à chaque fois que nous appuyons sur une touche pour la lancer. Ce fonctionnement particulier est dû à la manière dont anime.js a été codé : la bibliothèque utilise un système de [*promesses javascript*](https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Utiliser_les_promesses) - pour résumer lorsque l'on créé une promesse, cela lance un processus qui est éxecuté séparement du reste du programme : une fois qu'elle a été créée elle s'exécute et se détruit lorsqu'elle a fini de faire ce qu'elle avait à faire.
+Ici chaque animation est une promesse donc un processus qui va effectuer des opération mathématiques sur une ou plusieures propriétés d'un objet qui lui doit être définit de manière globale et donc stocker les résultats de ces calculs. La syntaxe pour créer une animation est la suivante :
+```javascript
+var animation1 = anime({ // on crée une variable
+        targets: anim1, // on spécifie l'objet javascript cible de notre animation
+        w: height * 0.4, // on donne la valeur cible que notre proriété 'w' doit atteindre
+        easing: [.91, -0.54, .29, 1.56], // on définit la courbe d'animation
+        direction: 'alternate', // on définit la direction de l'animation 
+        loop: true, // on précise si elle boucle ou pas
+        duration: 1000 // on précises la durée sur laquelle cette animation doit se dérouler
+    });
+```
+Dans la propriété **easing** de notre animation ici nous définissons une courbe d'animation sur mesure mais il es possible d'utiliser les [fonctions prédéfinies dans anime.js](https://github.com/juliangarnier/anime#easing-functions) comme par exemple *'easeInOutElastic'* et dans le cas ou nous utilisons une fonction "élastique" on peut définir en plus l'élasticité en ajoutant un propriété *elasticity: 600* à notre objet *'animation1'*.
+La propriété **direction** peut prendre trois valeurs différentes : 
+    - **'normal'** pour aller de la valeur initiale à la valeur cible.
+    - **'reverse'** pour aller de la valeur cible à la valeur initiale.
+    - **'alternate'** pour aller et venir entre la valeur initiale et notre valeur cible.
+L'entrée **loop** permet de préciser si notre animation boucle ou non en indiquant *true* ou *false* mais il est aussi possible de préciser le nombre de fois que l'on souhaite que l'animation se répète en indique un chiffre.
+La propriété **duration** précise le temps que va durer l'animation en millisecondes, dans le cadre de l'exercice proposé vous utiliserer probalement la durée du son sur lequel votre animation doit se jouer. (pour un son nommé 'sound' on pourra donc écrire 'duration : sound.duration()')
+
+Voici dont le code complet à entrer dans le **draw()** pour crééer une animation lorsque l'on appuie sur la touche 'a' (le code permet de créer l'animation, mais il n'affiche rien pour l'instant)
+```javascript
+// si on appuie sur 'a', on lance la première animation
+if (keyIsDown(65)) {
+    // on ré-initialise notre objet et sa propriété à la valeur souhaitée
+    anim1 = {
+        w: 0
+    }
+    // on crée notre animation avec les paramètres souhaités comme définit dans la doc de anime.js
+    var animation1 = anime({
+        targets: anim1,
+        w: height * 0.4,
+        easing: [.91, -0.54, .29, 1.56],
+        direction: 'alternate',
+        loop: true,
+        duration: 1000
+    });
+}
+```
+Il nous reste donc la troisième étape : dessiner un élément graphique en utilisant les propriétés de notre objet js ici appelé 'anim1'. Pour accéder à la propriété d'un objet on utilise l'accesseur **'.'**, il suffit donc d'écrire *'monobjet.maproriété'* pour avoir accés à la valeur souhaitée. Dessiner une ellipse dont le rayon est définie par la propriété 'w' stockée dans l'objet 'anim1' s'écrit donc comme ceci :
+```javascript
+ellipse(width * 0.5, height * 0.5, anim1.w, anim1.w)
+```
+Cette instruction doit s'écrire dans le **draw()** en dehors de la condition "appuyer sur une touche" dans laquelle nous avons définit notre animation. Notre ellipse est ici tout le temps dessinée mais lorsque l'on appuie sur 'a' son rayon commence à varier entre '0' et 'height*0.4' de manière alternative.
+
+Dans le cas du patatap, il va falloir faire en sorte que cette animation ne soit affichée que lorsqu'un son est en train de jouer.
+
+Voici donc un exemple de code complet comportant un son et une animation.
+
+```javascript
+var drone1 
+var anim1 = {
+    w: 0
+}
+function preload() {
+    drone1 = loadSound("../assets/217490__jarredgibb__drone-002.wav")
+}
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(0);
+}
+function draw() {
+    background(0);
+    // si on appuie sur 'e' le son drone1 se jouera.
+    playSound(drone1, 69);
+    // si on appuie sur 'e' on créé une animation spécifique
+    if (keyIsDown(69)) {
+        anim1 = {
+            w: 0
+        }
+        var animation1 = anime({
+            targets: anim1,
+            w: height * 0.4,
+            easing: [.91, -0.54, .29, 1.56],
+            direction: 'alternate',
+            loop: true,
+            duration: drone1.duration()
+        });
+    }
+    // si le son est en train de jouer on dessine un élément graphique animé par une propriété de notre objet
+    if(drone1.isPlaying() == true){
+        push()
+        noFill()
+        fill(255)
+        // ... en utilisant la propriété 'w' stocké dans l'objet 'anim1'
+        ellipse(width * 0.5, height * 0.5, anim1.w, anim1.w)
+        pop()
+    }
+}
+
+
+function playSound(sound, keyId) { 
+    if (keyIsDown(keyId) == true && sound.isPlaying() == false) {
+        sound.play(); // si c'est le cas on enclenche la lecture du son.
+    }
+}
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
+```
+
+[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+
+#### Constuire une animation se déroulant en plusieures étapes
+
+
+
+
+
+
+
+
+
+
+```javascript
 // https://github.com/juliangarnier/anime#easing-functions
 // https://github.com/juliangarnier/anime#animation-parameters (loop, direction)
 
