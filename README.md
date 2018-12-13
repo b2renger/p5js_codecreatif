@@ -1280,6 +1280,25 @@ Dans chacun des exemples la logique sera la même :
 
 3- utiliser les **propriétés de notre objet** pour **afficher des éléments graphiques**.
 
+Pour pouvoir utiliser cette bibliothèque, il vous faut d'abord la télécharger à cette adresse : https://github.com/juliangarnier/anime/releases
+
+Vous devez télécharger le fichier *.zip*, le décompresser et prendre le fichier *anime.js* pour le copier dans le dossier *p5* de votre dossier de travail.
+
+Pour rappel dans votre dossier vous devez avoir a minima ces dossiers :
+
+- /assets : il doit contenir vos sons et éventuellements des images que vous utiliseriez
+
+- /p5 : il doit contenir toutes vos bibliothèque js que nous utilisons - et donc maintenant aussi anime.js
+
+- /projet_patatap : il doit contenir votre page *index.html* et votre code *sketch.js*
+
+Une fois cela fait il faut ajouter le lien vers cette nouvelle bibliothèque à votre *index.html* dans la partie 'head'.
+
+```html
+<script src="../p5/anime.js"></script>
+```
+
+
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 #### Faire varier le rayon d'un cercle avec une fonction de easing sur mesure.
