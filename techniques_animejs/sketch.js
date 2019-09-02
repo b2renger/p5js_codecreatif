@@ -52,7 +52,7 @@ function draw() {
         var animation1 = anime({
             targets: anim1,
             w: height * 0.4,
-            easing: [.91, -0.54, .29, 1.56],
+            easing: 'cubicBezier(.91, -0.54, .29, 1.56)',
             direction: 'alternate',
             loop: true,
             duration: 1000
@@ -124,9 +124,8 @@ function draw() {
                 }, {
                     value: -50
                 }],
-                duration: 3000,
-                offset: 200
-            })
+                duration: 3000
+            }, '-=1500')
             .add({
                 targets: anim2,
                 x3: [{
@@ -145,9 +144,8 @@ function draw() {
                 }, {
                     value: -50
                 }],
-                duration: 3000,
-                offset: 400
-            });
+                duration: 3000
+            }, 400);
     }
 
     push()

@@ -17,14 +17,20 @@ Le plus simple est probablement de [télécharger](http://p5js.org/download/) et
 
 Pour rappel CDN signifie Content Delivery Network et permet de lier son code à des bibliothèques qui sont déjà hébergées en ligne.
 
-Généralement un bon éditeur de texte suffit. Parfois il pourra être utile d'utiliser un serveur local pour servir certaines pages demandant accès à des fonctions ou fichiers spécifiques (généralement des pages utilisant des images ou des sons sous formes de fichier doivent être ouvertes avec un serveur local). Il y a des nombreuses possibilités pour cela et beaucoup de documentation en ligne : personnellement j'utilise 'sinatra' un serveur en ruby, simplehttpserver pour python peut-être une alternative, ou d'autres encore via nodejs voire même des logiciels comme mamp.
+Généralement un bon éditeur de texte suffit. A ce titre je vous conseille de jeter un oeil à l'introduction de ce cours [introduction à p5js](https://github.com/b2renger/Introduction_p5js). Les étapes de bases pour commencer à travailler avec [VSCode](https://code.visualstudio.com/) y sont décrites.
 
-Une solution intéressante peut-être [Brackets](http://brackets.io/)
-Cet éditeur de texte est fait pour le développement web, il dispose d'une bonne ergonomie, il permet d'ouvrir des dossiers entiers et de naviguer à l'intérieur tout en éditant des fichiers, un serveur web est intégré (il suffit de cliquer sur le petit éclair en haut à droite pour ouvrir le le fichier édité dans une page web).
+Les premières étapes de ce cours sont par ailleurs un pré-requis pour pouvoir aller plus loin sereinement, ainsi je vous invite à consulter les rubriques suivantes :
+
+- [Comment travailler avec p5js](https://github.com/b2renger/Introduction_p5js#p5js_tools)
+- [Principes de bases](https://github.com/b2renger/Introduction_p5js#bases)
+- [Dessiner avec la souris](https://github.com/b2renger/Introduction_p5js#dessiner)
+    - [Les couleurs et la transparence](https://github.com/b2renger/Introduction_p5js#couleurs)
+    - [Utilisation de variables](https://github.com/b2renger/Introduction_p5js#simuler) 
+    - [Réaliser des symétries](https://github.com/b2renger/Introduction_p5js#symetries) 
 
 P5js recense un bon nombre de bibliothèques compatibles et revendiquant le même esprit : http://p5js.org/libraries/
 Nous allons principalement utiliser la bibliothèque dédiée au son : [référence de p5.sound](https://p5js.org/reference/#/libraries/p5.sound).
-Mais il peut aussi être utilisé avec n'impote quelles autres bibliothèques js.
+Mais il peut aussi être utilisé avec n'importe quelles autres bibliothèques js.
 
 Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à ce résultat :
 
@@ -1177,87 +1183,7 @@ function windowResized() {
 
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-### Convertir un svg en tableau de point et animer son tracé
 
-<img src="gifs/techniques_from_svg.gif" width="480" height="360" /><br>
-
-Cette technique est un peu complexe, mais elle permet de travailler avec des formes définies en svg (scalable vector graphics). Le rendu svg et le rendu canvas sont deux choses bien séparées en javascript, nous allons donc utiliser un programme [processing](https://processing.org/) et la bibliothèque [geomerative](http://www.ricardmarxer.com/geomerative/) qui permet d'importer un fichier svg et d'exporter un tableau de coordonnées qui sera utilisable en javascript.
-
-Pour rappel il est très simple d'installer une nouvelle bibliothèque dans processing : il suffit d'aller dans le menu *Sketch* -> *Importer une librairie* -> *Ajouter une librairie*. La fenêtre du *contribution manager* va alors s'ouvrir, il vous reste alors à taper *geomerative* dans le champ *filter* et de cliquer sur *installer*.
-
-Ensuite nous allons utiliser une classe en javascript qui permettra de gérer l'animation et l'affichage de notre forme.
-
-Vous pourrez trouver dans le dossier *tools* le programme processing dédié il s'appelle *svg_to_array*, à la ligne 5, il existe une variable name qui permet de renseigner le nom du svg à convertir.
-
-```java
-String name = "8413b54090698bf0";
-```
-Celui-ci doit se trouver dans le dossier nommé *svg* situé au même niveau dans la hierarchie de dossier que notre programme (c'est à dire dans le dossier tools).
-
-Une fois le nom de votre svg renseigné, il suffit de lancer le programme. Il faut laisser le temps au programme de charger le svg et d'écrire le "code" que nous allons utiliser. Une fois la fenêtre de dessin de processing affichée, un fichier *.txt* portant le nom de votre svg est écrit dans le dossier du programme.
-
-Ce fichier contient des variables contenant les différents points décrivant notre svg dans deux langages : le java pour une réutilisation dans processing, et le javascript pour une réutilisation dans p5js.
-
-Le premier tracé portera le nom *xpos0* pour les abscisses et *ypos0* pour les ordonnées, si vous avez plus d'un tracé les noms seront adaptés (*xpos1* et *ypos1* pour le deuxième etc.). Si vous voulez utiliser plusieurs svg pensez bien à changer ces noms par la suite pour ne pas avoir deux tableaux portant le même nom (sinon vous aurez des erreurs).
-
-Pensez bien à votre point d'ancrage central pour les rotation et assurez vous d'avoir une **répartition homogène** des différents points sur les courbes.
-
-Une fois votre svg exporté en tableaux de points vous pouvez copier / coller ceux-ci dans un nouveau fichier, qui pourrait s'appeller par exemple *drawing.js* et devra se situer à côté de votre fichier *index.html*.
-
-Il faut maintenant ajouter ce fichier à notre page web pour pouvoir avoir accès à ces nouvelles variables, en ajoutant une entrée à notre fichier *index.html* :
-
-```html
- <script src="drawing.js"></script>
-```
-
-Il faut maintenant aussi copier / coller le fichier *animate-drawing.js* dans votre dossier de travail, celui-ci contient une classe javascript qui vous facilitera l'utilisation des tableaux de points que nous avons pré-calculés.
-
-De la même façon que précédemment il faut ajouter ce fichier à notre *index.html* :
-
-```html
- <script src="animate-drawing.js"></script>
- ```
- 
- Passons maintenant à notre code javascript. Il va falloir créer une variable pour stocker notre objet javascript qui sera une instance de la classe *AnimateDrawing*, et lorsque nous allons créer notre objet nous devrons lui passer trois arguments : le tableau des abscisses du dessin, le tableau des ordonnées et la vitesse à laquelle dessiner (1 étant la valeur représentant la vitesse la plus élevée).
- 
- ```javascript
-var a; // un variable qui va stocker notre tracé animé
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    pixelDensity(1)
-
-    // on fournit les deux trableaux de coordonnées et la vitesse (1 étant le plus rapide)
-    // les deux tableaux sont fournis dans le fichier 'drawing.js'
-    a = new AnimateDrawing(xpos0, ypos0, 1)
-}
-```
-Le dessin va se créer progressivement dans un calque à fond transparent qui lui est propre. 
-
-Pour dessiner, on appelle la fonction **.animateDrawing()** sur notre objet en lui passant une couleur et une épaisseur de trait.
-
-On peut aussi effacer le dessin en appellant la fonction **.resetDrawing()** sur notre objet.
-
-
-```javascript
-function draw() {
-    background(0)
-
-    if (keyIsDown(65)) {
-        // on appelle la fonction animateDrawing avec en premier paramètre une couleur et en second l'épaisseur
-        a.animateDrawing(color(255, 0, 0), 5)
-    } else {
-        // on reset le dessin
-        a.resetDrawing()
-    }
-}
-```
-
-
-
-
-
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 ### Utiliser une bibliothèque externe pour créer des animations supplémentaires
 
@@ -1282,13 +1208,13 @@ Dans chacun des exemples la logique sera la même :
 
 Pour pouvoir utiliser cette bibliothèque, il vous faut d'abord la télécharger à cette adresse : https://github.com/juliangarnier/anime/releases
 
-Vous devez télécharger le fichier *.zip*, le décompresser et prendre le fichier *anime.js* pour le copier dans le dossier *p5* de votre dossier de travail.
+Vous devez télécharger le fichier *.zip*, le décompresser et prendre le fichier *anime.min.js* pour le copier dans le dossier *p5* de votre dossier de travail.
 
 Pour rappel dans votre dossier vous devez avoir a minima ces dossiers :
 
 - /assets : il doit contenir vos sons et éventuellements des images que vous utiliseriez
 
-- /p5 : il doit contenir toutes vos bibliothèque js que nous utilisons - et donc maintenant aussi anime.js
+- /p5 : il doit contenir toutes vos bibliothèque js que nous utilisons - et donc maintenant aussi anime.min.js
 
 - /projet_patatap : il doit contenir votre page *index.html* et votre code *sketch.js*
 
@@ -1320,7 +1246,7 @@ Ici chaque animation est une promesse donc un processus qui va effectuer des op�
 var animation1 = anime({ // on crée une variable
         targets: anim1, // on spécifie l'objet javascript cible de notre animation
         w: height * 0.4, // on donne la valeur cible que notre proriété 'w' doit atteindre
-        easing: [.91, -0.54, .29, 1.56], // on définit la courbe d'animation
+        easing: 'cubicBezier(.91, -0.54, .29, 1.56)', // on définit la courbe d'animation
         direction: 'alternate', // on définit la direction de l'animation 
         loop: true, // on précise si elle boucle ou pas
         duration: 1000 // on précises la durée sur laquelle cette animation doit se dérouler
@@ -1346,7 +1272,7 @@ if (keyIsDown(65)) {
     var animation1 = anime({
         targets: anim1,
         w: height * 0.4,
-        easing: [.91, -0.54, .29, 1.56],
+        easing: 'cubicBezier(.91, -0.54, .29, 1.56)',
         direction: 'alternate',
         loop: true,
         duration: 1000
@@ -1387,7 +1313,7 @@ function draw() {
         var animation1 = anime({
             targets: anim1,
             w: height * 0.4,
-            easing: [.91, -0.54, .29, 1.56],
+            easing: 'cubicBezier(.91, -0.54, .29, 1.56)',
             direction: 'alternate',
             loop: true,
             duration: drone1.duration()
@@ -1419,14 +1345,6 @@ function windowResized() {
 [^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
 #### Constuire une animation se déroulant en plusieures étapes
-
-
-
-
-
-
-
-
 
 
 ```javascript
@@ -1555,9 +1473,8 @@ function draw() {
                 }, {
                     value: -50
                 }],
-                duration: 3000,
-                offset: 200
-            })
+                duration: 3000
+            }, '-=1500') // offset relative to the end of previous animation
             .add({
                 targets: anim2,
                 x3: [{
@@ -1576,9 +1493,9 @@ function draw() {
                 }, {
                     value: -50
                 }],
-                duration: 3000,
-                offset: 400
-            });
+                duration: 3000
+                
+            }, 400); // absolute offset
     }
 
     push()
