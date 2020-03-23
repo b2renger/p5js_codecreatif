@@ -80,7 +80,9 @@ Le fichier *index.html* ressemblera donc à ceci si on utilise toutes les biblio
   <script language="javascript" type="text/javascript" src="../p5/addons/p5.dom.js"></script>
   <script language="javascript" type="text/javascript" src="../p5/addons/p5.sound.js"></script>
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
-  <style> body {padding: 0; margin: 0;} </style>
+  <style> * {padding: 0; margin: 0; overflow-y: hidden; scrollbar-width: none;} 
+	  ::-webkit-scrollbar { display: none; } 
+  </style>
 </head>
 <body>
 </body>
