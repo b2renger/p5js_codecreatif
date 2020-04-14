@@ -6,6 +6,8 @@ var ypos = 0
 var xdir = 5
 var ydir = 5
 
+var displayMessage = true
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     pixelDensity(1)
@@ -58,8 +60,18 @@ function draw() {
         ydir = random(1, 7)
     }
 
+    if (displayMessage) {
+        fill(255)
+        textAlign(CENTER, BOTTOM)
+        textSize(36)
+        text("Laisser appuyé sur 'a' pour dessiner dans un calque", width * 0.5, height)
+    }
+
 }
 
+function keyPressed(){
+    displayMessage = false
+}
 
 
 function windowResized() {

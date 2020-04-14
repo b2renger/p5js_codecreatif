@@ -21,6 +21,7 @@ var ypos = []
 var xtarget = []
 var ytarget = []
 
+var displayMessage = true
 
 function preload() {
 
@@ -187,6 +188,12 @@ function draw() {
         pop()
     }
 
+    if (displayMessage) {
+        fill(255)
+        textAlign(CENTER, BOTTOM)
+        textSize(36)
+        text("Appuer sur 'a', 'z', 'e', 'r', 't', 'y' ou 'u' pour déclencher la lecture d'un son", width * 0.5, height)
+    }
 
 
 }
@@ -197,6 +204,10 @@ function playSound(sound, keyId) {
         sound.play();
     }
 
+}
+
+function keyPressed(){
+    displayMessage = false
 }
 
 

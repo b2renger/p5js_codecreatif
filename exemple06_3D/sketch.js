@@ -9,6 +9,7 @@ let harp
 let harpAnalyzer
 let ico
 
+var displayMessage = true
 
 
 function preload() {
@@ -134,6 +135,12 @@ function draw() {
         pop()
     }
 
+    if (displayMessage) {
+        fill(255)
+        textAlign(CENTER, BOTTOM)
+        textSize(36)
+        text("Appuer sur 'q', 's', 'd', ou 'f' pour déclencher la lecture d'un son", width * 0.5, height)
+    }
 
 }
 
@@ -143,6 +150,10 @@ function playSound(sound, keyId) {
         sound.play();
     }
 
+}
+
+function keyPressed(){
+    displayMessage = false
 }
 
 

@@ -32,6 +32,8 @@ var anim4 = {
     h: 0
 }
 
+var displayMessage = true
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background(0);
@@ -246,8 +248,17 @@ function draw() {
     rect(width * 0.5, anim4.y, 50, anim4.h)
     pop()
 
+    if (displayMessage) {
+        fill(255)
+        textAlign(CENTER, BOTTOM)
+        textSize(36)
+        text("Appuer sur 'a', 'z', 'e' ou 'r' pour déclencher la lecture d'un son", width * 0.5, height)
+    }
 
+}
 
+function keyPressed(){
+    displayMessage = false
 }
 
 

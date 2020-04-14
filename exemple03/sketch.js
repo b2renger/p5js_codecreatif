@@ -47,6 +47,10 @@ function draw() {
     playSound(drone1, 69);
 
 
+    fill(255)
+    textAlign(CENTER, BOTTOM)
+    textSize(36)
+    text("Appuer sur 'a', 'z' ou 'e' pour déclencher la lecture d'un son", width*0.5, height)
 }
 
 /*

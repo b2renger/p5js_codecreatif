@@ -11,7 +11,7 @@ var stab2Amp
 var drone2
 var drone2FFT
 
-
+var displayMessage = true
 
 function preload() {
 
@@ -130,6 +130,12 @@ function draw() {
         pop()
     }
 
+    if (displayMessage) {
+        fill(255)
+        textAlign(CENTER, BOTTOM)
+        textSize(36)
+        text("Appuer sur 'a', 'z', 'e', 'r' ou 't' pour déclencher la lecture d'un son", width * 0.5, height)
+    }
 
 
 }
@@ -139,6 +145,10 @@ function playSound(sound, keyId) {
     if (keyIsDown(keyId) == true && sound.isPlaying() == false) {
         sound.play();
     }
+}
+
+function keyPressed() {
+    displayMessage = false
 }
 
 

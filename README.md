@@ -4,6 +4,7 @@ Code for a creative coding class with designers.
 
 Le but de ce cours est de recréer un page web inspirée de [patatap](https://patatap.com/).
 
+L'ensemble des explication est consultable et téléchargeable sur ce dépot [github](https://github.com/b2renger/p5js_codecreatif).
 
 P5js est un projet issu de processing qui est un langage de programmation basé sur java orienté vers la création graphique et interactive. P5js a pour but de transposer l'esprit de processing au web et donc au langage javascript. C'est un framework simple d'accès pour les débutants avec une bonne documentation et une communauté active. 
 
@@ -38,23 +39,30 @@ Au terme des différentes étapes décrites ici vous devriez pouvoir arriver à 
 
 ## CONTENU
 
-* [ÉTAPE 0 : Se familiariser avec p5js](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-0--se-familiariser-avec-p5js)<br>
-* [ÉTAPE 1 : Charger et jouer un son](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-1--charger-et-jouer-un-son)<br>
-* [ÉTAPE 2 : Analyser le volume du son et animer notre cercle](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-2--analyser-le-volume-du-son-et-animer-notre-cercle)<br>
-* [ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier](https://github.com/b2renger/p5js_codecreatif#%C3%89tape-3--ins%C3%A9rer-plusieurs-sons-et-d%C3%A9clencher-leur-lecture-%C3%A0-laide-de-touches-du-clavier)<br>
-    * [Couleur réagissant au volume d'un son](https://github.com/b2renger/p5js_codecreatif#couleur-r%C3%A9agissant-au-volume-dun-son)<br>
-    * [Rayon d'un cercle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rayon-dun-cercle-d%C3%A9pendant-de-la-position-de-lecture)<br>
-    * [Rotation d'un rectangle dépendant de la position de lecture](https://github.com/b2renger/p5js_codecreatif#rotation-dun-rectangle-d%C3%A9pendant-de-la-position-de-lecture)<br>
-    * [Calculer l'énergie d'une bande de fréquence avec une FFT](https://github.com/b2renger/p5js_codecreatif#calculer-l%C3%A9nergie-dune-bande-de-fr%C3%A9quence-avec-une-fft)<br>
-    * [Dessiner une waveforme](https://github.com/b2renger/p5js_codecreatif#dessiner-une-waveforme)<br>
-    * [Cercle progressif](https://github.com/b2renger/p5js_codecreatif#parcourir-un-cercle-%C3%A0-laide-des-coordonn%C3%A9es-polaires)<br>
-    * [Déplacement de points](https://github.com/b2renger/p5js_codecreatif#d%C3%A9placer-un-ensemble-de-points)<br>
-* [ÉTAPE 4 : Perfectionner sa technique](https://github.com/b2renger/p5js_codecreatif#%C3%A9tape-4--perfectionner-sa-technique)<br>
-    * [Dessiner dans un calque](https://github.com/b2renger/p5js_codecreatif#dessiner-dans-un-calque)<br>
-    * [Utiliser une bibliothèque externe pour créer des animations supplémentaires](https://github.com/b2renger/p5js_codecreatif#utiliser-une-biblioth%C3%A8que-externe-pour-cr%C3%A9er-des-animations-suppl%C3%A9mentaires)<br>
+* [Se familiariser avec p5js](#Se-familiariser-avec-p5js)<br>
+    * [HTML et JS](#HTML-et-JS)
+    * [Dessiner en javascript avec l'api processing](#Dessiner-en-javascript-avec-l'api-processing)
+* [Charger et jouer un son](#Charger-et-jouer-un-son)<br>
+* [Analyser le volume du son et animer notre cercle](#Analyser-le-volume-du-son-et-animer-notre-cercle) - [**DEMO**](https://b2renger.github.io/p5js_codecreatif/exemple02/)<br>
+* [Ajouter plusieurs sons et declencher leur lecture avec des touches de clavier](#Ajouter-plusieurs-sons-et-declencher-leur-lecture-avec-des-touches-de-clavier) - [**DEMO**](https://b2renger.github.io/p5js_codecreatif/exemple03/)<br>
+* [Realiser des animations audio-réactives](#Realiser-des-animations-audio-reactives) - [**DEMO1**](https://b2renger.github.io/p5js_codecreatif/exemple04/) - [**DEMO2**](https://b2renger.github.io/p5js_codecreatif/exemple05/) - [**DEMO3**](https://b2renger.github.io/p5js_codecreatif/exemple06_3D)<br>
+    * [Couleur réagissant au volume d'un son](#Couleur-reactive-au-volume)<br>
+    * [Rayon d'un cercle reactif à la position de lecture](#Rayon-d'un-cercle-reactif-a-la-position-de-lecture)<br>
+    * [Rotation d'un rectangle dependant de la position de lecture](#Rotation-d'un-rectangle-dependant-de-la-position-de-lecture)<br>
+    * [Calculer l'energie d'une bande de frequence avec une FFT](#Calculer-l'energie-d'une-bande-de-frequence-avec-une-FFT)<br>
+    * [Dessiner une waveforme](#Dessiner-une-waveforme)<br>
+    * [Parcourir un cercle a l'aide des coordonnees polaires](#Parcourir-un-cercle-a-l'aide-des-coordonnees-polaires)<br>
+    * [Deplacement de points](#Deplacer-un-ensemble-de-points)<br>
+    * [Utiliser de la 3D](#Utiliser-de-la-3D)<br>
+* [Perfectionner sa technique](#Perfectionner-sa-technique)<br>
+    * [Dessiner dans un calque](#Dessiner-dans-un-calque) - [**DEMO**](https://b2renger.github.io/p5js_codecreatif/techniques_offscreen_graphics)<br>
+    * [Utiliser animejs pour creer des animations](#Utiliser-animejs-pour-creer-des-animations) - [**DEMO**](https://b2renger.github.io/p5js_codecreatif/techniques_animejs)<br>
+        * [Faire varier le rayon d'un cercle avec une fonction de easing sur mesure](#Faire-varier-le-rayon-d'un-cercle-avec-une-fonction-de-easing-sur-mesure)<br>
+        * [Constuire une animation se deroulant en plusieures etapes](#Constuire-une-animation-se-deroulant-en-plusieures-etapes)
 
 
-## ÉTAPE 0 : se familiariser avec p5js 
+
+## Se familiariser avec p5js 
 
 Un programme p5js est destiné à être utilisé dans une page web. Généralement en dispose d'un fichier *index.html* qui nous permet de définir notre page web et les fichiers ressources (liens vers les bibliothèques) et d'un fichier *sketch.js* qui va être notre programme écrit en javascript.
 
@@ -136,6 +144,8 @@ https://p5js.org/reference/#/p5/createCanvas
 
 https://p5js.org/reference/#/p5/resizeCanvas
 
+[**home**](#Contenu)
+
 ### Dessiner en javascript avec l'api processing
 
 Le code de dessin va généralement s'écrire dans la fonction **draw()**. Par exemple pour dessiner un cercle nous alllons appeler la fonction **ellipse()** dont voici la page de référence :
@@ -176,9 +186,9 @@ Il est bien sûr possible de dessiner d'autres formes géométriques. Vous pouve
 
 **L'exemple01** reprend ces différents éléments et les formalisent dans un programme fonctionnel permettant de dessiner un cercle au centre de notre fenêtre, ce cercle reste au centre de la fenêtre même si l'utilisateur redimensionne sa fenêtre.
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)
 
-## ÉTAPE 1 : charger et jouer un son
+## Charger et jouer un son
 
 Vous pourrez trouver des sons en license libre [Creative Commons](https://creativecommons.org/) sur le site [freesound](https://freesound.org/). Il vous suffit de créer un compte (gratuit), puis de chercher ...
 
@@ -232,9 +242,9 @@ function windowResized(){
     background(0);
 }
 ```
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)
 
-## ÉTAPE 2 : Analyser le volume du son et animer notre cercle 
+## Analyser le volume du son et animer notre cercle 
 
 Nous allons maintenant nous intéresser à la manière dont nous allons pouvoir calculer le niveau sonore de notre fichier audio en train de lireet faire réagir notre cercle à celui-ci.
 
@@ -292,9 +302,9 @@ Maitenant que nous avons calculé deux valeurs utiles et dans des intervalles de
 ```
 **L'exemple02** reprend ces différents éléments et les formalisent dans un programme fonctionnel permettant de dessiner un cercle au centre de notre fenêtre, ce cercle reste au centre de la fenêtre même si l'utilisateur redimensionne sa fenêtre.
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
-## ÉTAPE 3 : Insérer plusieurs sons et déclencher leur lecture à l'aide de touches du clavier
+## Ajouter plusieurs sons et declencher leur lecture avec des touches de clavier
 
 La première chose à faire va être de créer un dossier "assets" à la racine de notre répértoire de travail, dans ce dossier nous allons ranger tous les fichiers nécessaires au bon fonctionnement de notre programme. 
 
@@ -406,11 +416,12 @@ Il faut bien sur que les variables "stab1" et "drone1" aient été définies au 
 
 Le code permettant de faire tout cela est récapitulé dans le dossier "exemple03".
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-## ÉTAPE 4 : Réaliser des animations réactives à nos sons
+[**home**](#Contenu)<br>
 
-### Couleur réagissant au volume d'un son
+## Realiser des animations audio-reactives 
+
+### Couleur reactive au volume
 
 <img src="gifs/patatap_animation4.gif" width="480" height="360" /><br>
 
@@ -505,10 +516,9 @@ if (stab2.isPlaying() == true) { // si le son joue on affiche notre animation.
 }
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
-
-### Rayon d'un cercle dépendant de la position de lecture
+### Rayon d'un cercle reactif a la position de lecture
 
 <img src="gifs/patatap_animation1.gif" width="480" height="360" /><br>
 
@@ -567,9 +577,10 @@ if (kick1.isPlaying() == true) {
     pop()
 }
 ```
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-### Rotation d'un rectangle dépendant de la position de lecture
+[**home**](#Contenu)<br>
+
+### Rotation d'un rectangle dependant de la position de lecture
 
 <img src="gifs/patatap_animation2.gif" width="480" height="360" /><br>
 
@@ -646,9 +657,9 @@ if (stab1.isPlaying() == true) {
 }
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
-### Calculer l'énergie d'une bande de fréquence avec une FFT
+### Calculer l'energie d'une bande de frequence avec une FFT
 
 <img src="gifs/patatap_animation3.gif" width="480" height="360" /><br>
 
@@ -729,8 +740,7 @@ if (drone1.isPlaying() == true) {
 
 Notez bien l'utilisation de plusieurs **push()** et **pop()** imbriqués.
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
-
+[**home**](#Contenu)<br>
 
 ### Dessiner une waveforme
 
@@ -825,12 +835,12 @@ if (drone2.isPlaying() == true) {
 }
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
 Vous pouvez retrouver l'ensemble de ces 5 premières animations dans l'**exemple04**
 
 
-### Parcourir un cercle à l'aide des coordonnées polaires
+### Parcourir un cercle a l'aide des coordonnees polaires
 
 <img src="gifs/patatap_animation6.gif" width="480" height="360" /><br>
 
@@ -899,11 +909,10 @@ for (var i = 0; i < ncurrentsegment; i++) {
 ```
 Avec ces quelques lignes de code vous n'arrivez pas tout à fait à l'animation représentée dans le gif. Pour l'instant vous ne dessinez que des segment noirs qui s'affichent au fil du déroulement du son. A vous de jouer pour en faire quelque chose de différent maintenant : vous pouvez par exemple essayer de changer la valeur de la variable *nsegments* (essayez 5 ou 7 par exemple), au lieu de dessiner des lignes vous pourriez dessiner des cercles sur chaque position calculée, vous pourriez créer un dégradé etc.
 
+[**home**](#Contenu)<br>
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
 
-
-### Déplacer un ensemble de points
+### Deplacer un ensemble de points
 
 <img src="gifs/patatap_animation7.gif" width="480" height="360" /><br>
 
@@ -1028,10 +1037,13 @@ if (stab3.isPlaying() == true) {
 
 Vous pouvez retrouver l'ensemble de ces 7 premières animations dans l'**exemple05**
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
+### Utiliser de la 3D
 
-## ÉTAPE 4 : Perfectionner sa technique
+Pas d'explications pour le moment mais l'exemple 6.
+
+## Perfectionner sa technique
 
 ### Dessiner dans un calque
 
@@ -1182,11 +1194,10 @@ function windowResized() {
 ```
 
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
 
-
-### Utiliser une bibliothèque externe pour créer des animations supplémentaires
+### Utiliser animejs pour creer des animations
 
 <img src="gifs/techniques_animejs.gif" width="480" height="360" /><br>
 
@@ -1226,9 +1237,10 @@ Une fois cela fait il faut ajouter le lien vers cette nouvelle bibliothèque à 
 ```
 
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
-#### Faire varier le rayon d'un cercle avec une fonction de easing sur mesure.
+
+#### Faire varier le rayon d'un cercle avec une fonction de easing sur mesure
 
 Notre première animation va consister à faire varier le rayon d'un cercle à l'aide d'une courbe de 'easing' faite sur mesure.
 
@@ -1343,9 +1355,9 @@ function windowResized() {
 
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
-#### Constuire une animation se déroulant en plusieures étapes
+#### Constuire une animation se deroulant en plusieures etapes
 
 
 ```javascript
@@ -1605,6 +1617,6 @@ function windowResized() {
 }
 ```
 
-[^home](https://github.com/b2renger/p5js_codecreatif#contenu)<br>
+[**home**](#Contenu)<br>
 
 
